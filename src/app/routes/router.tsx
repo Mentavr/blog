@@ -1,21 +1,27 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { PrivateRoute } from './PrivateRoute';
 import { Layout, LoginPage, MainPage, SignUpPage } from '../pages';
+import { ArticlePage } from '../pages/ArticlePage/ArticlePage';
+import { routs } from '@/utils/constant/routes';
 
 export const router = createBrowserRouter([
   {
     element: <Layout />,
-    path: '/',
+    path: routs.MAIN,
     children: [
       {
         element: <PrivateRoute />,
         children: [
           {
-            path: '/main',
+            path: routs.ARTICLE,
             element: <MainPage />,
           },
           {
-            path: '/profile',
+            path: `${routs.ARTICLE}/:slug`,
+            element: <ArticlePage />,
+          },
+          {
+            path: routs.PROFILE,
             element: <div>Profile</div>,
           },
         ],
@@ -33,7 +39,7 @@ export const router = createBrowserRouter([
     element: <Outlet />,
     children: [
       {
-        path: '*',
+        path: routs.ALL,
         element: <div>Error Page</div>,
       },
     ],

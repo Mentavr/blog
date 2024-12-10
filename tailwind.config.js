@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       boxShadow: {
+        custom: '0 4px 12px 0 rgba(0, 0, 0, 0.15)',
         myShadow:
           '0 1px 3px 0 var(--table-header), 0 1px 7px 0 rgba(0, 0, 0, 0.03), 0 3px 13px 0 rgba(0, 0, 0, 0.04), 0 5px 24px 0 rgba(0, 0, 0, 0.04), 0 9px 44px 0 rgba(0, 0, 0, 0.05), 0 22px 106px 0 rgba(0, 0, 0, 0.07)',
       },

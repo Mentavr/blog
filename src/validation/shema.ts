@@ -1,6 +1,6 @@
 import { number, object, string } from 'yup';
 
-const validation = {
+export const validation = {
   login: object({
     email: string().email(),
     password: string(),

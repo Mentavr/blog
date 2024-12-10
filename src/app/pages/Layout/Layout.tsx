@@ -1,7 +1,15 @@
 import { Header } from '@/app/components/Header/Header';
-import { Outlet } from 'react-router-dom';
+import { routs } from '@/utils/constant/routes';
+import { useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 export const Layout = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate(routs.ARTICLE);
+  }, []);
+
   return (
     <div>
       <div className="w-full bg-backgroundColorBase px-[22px] py-[15px]">
