@@ -1,9 +1,10 @@
 import { Modal } from '@/app/components/Modal/Modal';
 import { Header } from '@/app/components/Header/Header';
-import { Pagination } from '@/app/components/Pagination/Pagination';
-import { Cards } from '@/app/components/Cards/Cards';
-import { Article } from '@/app/components/Article/Article';
+import { CardArticle } from '@/app/components/CardArticle/CardArticle';
 import { Button } from '@/app/components/Button/Button';
 import { TagArticle } from '@/app/components/TagArticle/TagArticle';
+import { CardsArticles } from '@/app/components/CardsArticles/CardsArticles';
+import { Article } from '@/app/components/Article/Article';
+import { InteractionArticle } from '@/app/components/InteractionArticle/InteractionArticle';
 
-export { Modal, Header, Pagination, Cards, Article, Button, TagArticle };
+export { Modal, Header, CardArticle, CardsArticles, Button, TagArticle, Article, InteractionArticle };

@@ -6,12 +6,29 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { App } from 'antd';
 import { store } from './store/store';
 import { router } from './app/routes/router';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { CookiesProvider } from 'react-cookie';
 
 createRoot(document.getElementById('root')!).render(
-  <AuthProvider>
-    <ReduxProvider store={store}>
-      <RouterProvider router={router} />
-      <App />
-    </ReduxProvider>
-  </AuthProvider>
+  <CookiesProvider defaultSetOptions={{ path: '/' }}>
+    <AuthProvider>
+      <ReduxProvider store={store}>
+        <RouterProvider router={router} />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        <App />
+      </ReduxProvider>
+    </AuthProvider>
+  </CookiesProvider>
 );

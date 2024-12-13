@@ -38,3 +38,14 @@ export interface ArticleTypeRequest {
 export interface ArticleTypeResponse {
   article: ArticleType;
 }
+
+export interface UserTypeResponse {
+  user: UserType;
+}
+export interface UserType {
+  email: string;
+  token: string;
+  username: string;
+  bio: string;
+  image: null | string;
+}

@@ -1,4 +1,4 @@
-import { Layout } from './pages/Layout/Layout';
+import { Layout } from './pages';
 
 const App = () => {
   return (

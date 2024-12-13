@@ -1,12 +1,8 @@
-// import { useGetMeQuery } from "@/store/services/auth";
+import { routs } from '@/utils/constant/routes';
+import { useAuth } from '@/utils/hooks/useAuth';
 import { Navigate, Outlet } from 'react-router';
 
 export const PrivateRoute = () => {
-  // const { data, isLoading, isError } = useGetMeQuery();
-  // if (isLoading) return null
-
-  // const isAuth = !isError;
-  const isAuth = true;
-
-  return isAuth ? <Outlet /> : <Navigate to={'/login'} />;
+  const { isAuth } = useAuth();
+  return isAuth ? <Outlet /> : <Navigate to={routs.LOGIN} />;
 };

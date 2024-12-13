@@ -1,57 +1,48 @@
 import { Button } from '@/app/components';
-import { useGetLoginUserMutation } from '@/store/slices/api/userApi';
-import { routs } from '@/utils/constant/routes';
 import { inputTrim } from '@/utils/helpers/inputTrim';
-import { useAuth } from '@/utils/hooks/useAuth';
 import { validation } from '@/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Form, Input, Spin } from 'antd';
-import { useCookies } from 'react-cookie';
-import { useForm, Controller } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Form, Input } from 'antd';
+import { Controller, useForm } from 'react-hook-form';
 
-interface FormType {
-  email: string;
-  password: string;
-}
-
-export const LoginPage = () => {
+export const ProfilePage = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(validation.login) });
+  } = useForm({ resolver: yupResolver(validation.profile) });
 
-  const [_, setCookie] = useCookies(['authToken']);
-
-  const [signIn, { isLoading }] = useGetLoginUserMutation();
-  const { login } = useAuth();
-  const navigate = useNavigate();
-
-  const onSubmit = async (data: FormType) => {
-    const { email, password } = data;
-    try {
-      const data = await signIn({
-        user: {
-          email: email,
-          password: password,
-        },
-      }).unwrap();
-
-      setCookie('authToken', data.user.token);
-      login();
-      navigate(routs.ARTICLE);
-    } catch (error) {
-      console.error('error', error);
-    }
+  const onSubmit = (data: any) => {
+    console.log('Form Data:', data);
   };
 
-  return isLoading ? (
-    <Spin className="absolute inset-0 top-2/4" size="large" />
-  ) : (
+  return (
     <div className="py-[48px] px-[32px] max-w-[384px] border border-normalColor rounded-[6px] bg-backgroundColorBase shadow-myShadow mx-auto mt-[59px] text-center">
-      <h1 className="weight-500 text-[20px] text-[#262626] mb-[20px]">Sign In</h1>
+      <h1 className="weight-500 text-[20px] text-[#262626] mb-[20px]">Edit Profile</h1>
       <Form layout={'vertical'} onFinish={handleSubmit(onSubmit)}>
+        <Form.Item className="mb-[20px]" label="Username">
+          <Controller
+            name="name"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Input
+                onInput={(e) => inputTrim(e, field.value)}
+                {...field}
+                className="rounder-[4px]"
+                size="large"
+                placeholder="Username"
+                status={errors.name && 'error'}
+              />
+            )}
+          />
+          {errors.name && (
+            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
+              {errors.name.message}
+            </span>
+          )}
+        </Form.Item>
+
         <Form.Item className="mb-[20px]" label="Email address">
           <Controller
             name="email"
@@ -75,7 +66,7 @@ export const LoginPage = () => {
           )}
         </Form.Item>
 
-        <Form.Item className="mb-[20px]" label="Password">
+        <Form.Item className="mb-[20px]" label="New password">
           <Controller
             name="password"
             control={control}
@@ -86,7 +77,7 @@ export const LoginPage = () => {
                 onInput={(e) => inputTrim(e, field.value)}
                 className="h-[40] rounder-[4px]"
                 size="large"
-                placeholder="Password"
+                placeholder="New password"
                 status={errors.password && 'error'}
               />
             )}
@@ -98,17 +89,33 @@ export const LoginPage = () => {
           )}
         </Form.Item>
 
+        <Form.Item className="mb-[20px]" label="Avatar image (url)">
+          <Controller
+            name="avatar"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Input
+                {...field}
+                onInput={(e) => inputTrim(e, field.value)}
+                className="h-[40] rounder-[4px]"
+                size="large"
+                placeholder="Avatar image"
+                status={errors.avatar && 'error'}
+              />
+            )}
+          />
+          {errors.avatar && (
+            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
+              {errors.avatar.message}
+            </span>
+          )}
+        </Form.Item>
+
         <Form.Item className="mb-[0]">
           <Button className="mb-[8px]" variant="solid" color="primary" htmlType="submit">
-            Login
+            Save
           </Button>
-          <span className="text-[12px] text-[#8c8c8c] text-center">
-            Don’t have an account?{' '}
-            <Link className="text-primaryColor" to={routs.SIGNUP}>
-              Sign Up
-            </Link>
-            .
-          </span>
         </Form.Item>
       </Form>
     </div>

@@ -7,7 +7,7 @@ interface ButtonProps {
   className?: string;
   htmlType?: 'submit' | 'reset' | 'button';
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  variant?: 'outlined' | 'solid';
+  variant?: 'outlined' | 'solid' | 'text';
   disabled?: boolean;
   color?: 'default' | 'primary' | 'danger';
   colorDefault?: 'black' | 'green';

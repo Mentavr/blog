@@ -1,7 +1,6 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { PrivateRoute } from './PrivateRoute';
-import { Layout, LoginPage, MainPage, SignUpPage } from '../pages';
-import { ArticlePage } from '../pages/ArticlePage/ArticlePage';
+import { ArticlePage, CreateArticlePage, EditArticlePage, Layout, LoginPage, MainPage, SignUpPage } from '../pages';
 import { routs } from '@/utils/constant/routes';
 
 export const router = createBrowserRouter([
@@ -10,7 +9,7 @@ export const router = createBrowserRouter([
     path: routs.MAIN,
     children: [
       {
-        element: <PrivateRoute />,
+        element: <Outlet />,
         children: [
           {
             path: routs.ARTICLE,
@@ -27,10 +26,17 @@ export const router = createBrowserRouter([
         ],
       },
       {
+        element: <PrivateRoute />,
+        children: [
+          { path: `${routs.ARTICLE}/:slug${routs.EDITARTICLE}`, element: <EditArticlePage /> },
+          { path: routs.CREATEARTICLE, element: <CreateArticlePage /> },
+        ],
+      },
+      {
         element: <Outlet />,
         children: [
-          { path: '/login', element: <LoginPage /> },
-          { path: '/signUp', element: <SignUpPage /> },
+          { path: routs.LOGIN, element: <LoginPage /> },
+          { path: routs.SIGNUP, element: <SignUpPage /> },
         ],
       },
     ],
