@@ -1,3 +1,3 @@
 # React + TypeScript + Vite
 
-[сайт](blog-6dcq-git-main-mentavrs-projects.vercel.app)
+[сайт](https://blog-6dcq.vercel.app/)
