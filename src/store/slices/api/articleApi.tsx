@@ -1,8 +1,6 @@
 import { reduxBaseQuery } from '@/configs/reduxBaseQuery';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { ArticleTypeRequest, ArticleTypeResponse, ArticlesTypeRequest, ArticlesTypeResponse } from '../types.slices';
-import { errorsApiMessage } from '@/utils/constant/errors';
-import { toast } from 'react-toastify';
 
 export const articlesApi = createApi({
   reducerPath: 'articlesApi',
