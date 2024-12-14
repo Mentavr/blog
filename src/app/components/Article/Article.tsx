@@ -1,5 +1,10 @@
 import { HartIcon } from '@/assets/icons/HartIcon';
-import { useDeleteArticleMutation, useGetArticleQuery } from '@/store/slices/api/articleApi';
+import {
+  useDeleteArticleMutation,
+  useFavoriteArticleMutation,
+  useGetArticleQuery,
+  useUnFavoriteArticleMutation,
+} from '@/store/slices/api/articleApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, TagArticle } from '..';
 import Markdown from 'react-markdown';
@@ -9,9 +14,18 @@ import { Popover } from 'antd';
 import { useState } from 'react';
 import { DangerYellowIcon } from '@/assets/icons/DangerYellowIcon';
 import { toast } from 'react-toastify';
+import { EmptyHartIcon } from '@/assets/icons/EmptyHartIcon';
+import { errorsApiMessage } from '@/utils/constant/errors';
+import { formatDate } from '@/utils/helpers/formatDate';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 interface IError {
   originalStatus: number | string;
+}
+
+interface IError {
+  status: string | number;
 }
 
 export const Article = () => {
@@ -23,15 +37,31 @@ export const Article = () => {
   const { isAuth } = useAuth();
   const navigate = useNavigate();
 
-  const [deleteArticle, { isError }] = useDeleteArticleMutation();
+  const [deleteArticle] = useDeleteArticleMutation();
+  const [favorite] = useFavoriteArticleMutation();
+  const [unFavorite] = useUnFavoriteArticleMutation();
+
+  const handlerFavorite = async () => {
+    try {
+      favorited ? await unFavorite(slug).unwrap() : await favorite(slug).unwrap();
+    } catch (error) {
+      const { status } = error as IError;
+      console.log('===> ', error);
+      if (status === errorsApiMessage[401].name) {
+        toast.error(errorsApiMessage[401].message);
+      }
+
+      if (status === errorsApiMessage.FETCH_ERROR.name) {
+        toast.error(errorsApiMessage.FETCH_ERROR.message);
+      }
+    }
+  };
 
   const handlerEdit = () => {
     navigate(`${routs.ARTICLE}/${slug}${routs.EDITARTICLE}`);
   };
 
   const handlerYes = async () => {
-    console.log('isError', isError);
-
     try {
       if (!slug) {
         throw new Error('Не правилььный slug');
@@ -46,7 +76,6 @@ export const Article = () => {
         toast.error('У вас нет прав удалить этот пост');
         navigate(routs.ARTICLE);
       }
-      console.error('error');
     }
   };
 
@@ -85,7 +114,7 @@ export const Article = () => {
 
   if (!data) return null;
 
-  const { title, description, body, tagList, createdAt, updatedAt, favorited, favoritesCount, author } = data.article;
+  const { title, description, body, tagList, createdAt, favorited, favoritesCount, author } = data.article;
 
   return (
     <article className="w-full px-[16px] pt-[15px] pb-[100px] bg-backgroundColorBase shadow-custom mt-[26px] closePop">
@@ -94,10 +123,10 @@ export const Article = () => {
           <div className="flex flex-col gap-[4px]">
             <div className="flex gap-[13px] items-center">
               <h3 className="text-primaryColor text-[20px] break-words">{title}</h3>
-              <div className="flex gap-[5px] items-center">
-                <HartIcon />
+              <button className="flex gap-[5px] items-center border-0" onClick={handlerFavorite}>
+                {favorited ? <HartIcon /> : <EmptyHartIcon />}
                 <span className="text-[12px] text-textColor">{favoritesCount}</span>
-              </div>
+              </button>
             </div>
             <div className="flex gap-[8px] items-center">
               {tagList?.map((tag, index) => {
@@ -106,9 +135,9 @@ export const Article = () => {
             </div>
           </div>
           <div className="flex items-center gap-[12px]">
-            <div className="flex flex-col gap-[2px]">
+            <div className="flex flex-col gap-[2px] items-end">
               <span className="text-[18px] text-headingColor">{author.username}</span>
-              <span className="text-textColorSecondary">{createdAt}</span>
+              <span className="text-textColorSecondary">{formatDate(createdAt)}</span>
             </div>
             <div className="w-[46px] h-[46px] rounded-full aspect-square flex items-center justify-center overflow-hidden">
               <img className="object-cover w-full h-full aspect-square" src={author.image} alt="user icon" />
@@ -137,8 +166,10 @@ export const Article = () => {
           </div>
         </div>
       </header>
-      <main className="flex gap-[12px]">
-        <Markdown>{body}</Markdown>
+      <main className="flex gap-[12px] flex-col">
+        <Markdown remarkPlugins={[[remarkGfm, { singleTilde: false }]]} rehypePlugins={[rehypeRaw]}>
+          {body}
+        </Markdown>
       </main>
     </article>
   );

@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { Spin } from 'antd';
 import { useCookies } from 'react-cookie';
 import { inputTrim } from '@/utils/helpers/inputTrim';
+import { errorsApiMessage } from '@/utils/constant/errors';
 
 interface FormType {
   name: string;
@@ -21,7 +22,7 @@ interface FormType {
 }
 
 interface IError extends Error {
-  status: number;
+  status: number | string;
 }
 export const SignUpPage = () => {
   const {
@@ -52,8 +53,13 @@ export const SignUpPage = () => {
       navigate(routs.ARTICLE);
     } catch (error) {
       const { status } = error as IError;
-      if (status === 422) {
-        toast.error('Пользователь с таким ником или email уже существует');
+
+      if (status === errorsApiMessage.FETCH_ERROR.name) {
+        toast.error(errorsApiMessage.FETCH_ERROR.message);
+      }
+
+      if (status === errorsApiMessage[422].name) {
+        toast.error(errorsApiMessage[422].message.signUp);
       }
     }
   };

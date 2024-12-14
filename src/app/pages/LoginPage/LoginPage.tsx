@@ -1,5 +1,6 @@
 import { Button } from '@/app/components';
 import { useGetLoginUserMutation } from '@/store/slices/api/userApi';
+import { errorsApiMessage } from '@/utils/constant/errors';
 import { routs } from '@/utils/constant/routes';
 import { inputTrim } from '@/utils/helpers/inputTrim';
 import { useAuth } from '@/utils/hooks/useAuth';
@@ -9,10 +10,15 @@ import { Form, Input, Spin } from 'antd';
 import { useCookies } from 'react-cookie';
 import { useForm, Controller } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface FormType {
   email: string;
   password: string;
+}
+
+interface IError {
+  status: string | number;
 }
 
 export const LoginPage = () => {
@@ -42,7 +48,15 @@ export const LoginPage = () => {
       login();
       navigate(routs.ARTICLE);
     } catch (error) {
-      console.error('error', error);
+      const { status } = error as IError;
+
+      if (status === errorsApiMessage[422].name) {
+        toast.error(errorsApiMessage[422].message.login);
+      }
+
+      if (status === errorsApiMessage.FETCH_ERROR.name) {
+        toast.error(errorsApiMessage.FETCH_ERROR.message);
+      }
     }
   };
 

@@ -4,13 +4,14 @@ import { TagsArticleType } from '../InteractionArticle';
 import { generateUniqueId } from '@/utils/helpers/generateUniqueId';
 
 interface AddTagProps {
+  nameTag: string;
   idArticle: string;
   setTagsArticle: (e: TagsArticleType[]) => void;
   tagsArticle: TagsArticleType[];
 }
 
-export const AddTag = ({ idArticle, tagsArticle, setTagsArticle }: AddTagProps) => {
-  const [value, setValueInput] = useState<string>('');
+export const AddTag = ({ nameTag, idArticle, tagsArticle, setTagsArticle }: AddTagProps) => {
+  const [value, setValueInput] = useState<string>(nameTag);
 
   const isLast = tagsArticle[tagsArticle.length - 1].idArticle === idArticle;
 
@@ -23,7 +24,7 @@ export const AddTag = ({ idArticle, tagsArticle, setTagsArticle }: AddTagProps) 
   };
 
   const handlerAddArticle = () => {
-    setTagsArticle([...tagsArticle, { nameTag: value, idArticle: generateUniqueId() }]);
+    setTagsArticle([...tagsArticle, { nameTag: '', idArticle: generateUniqueId() }]);
   };
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export const AddTag = ({ idArticle, tagsArticle, setTagsArticle }: AddTagProps) 
         className="h-[40px] rounder-[4px] max-w-[300px]"
         size="large"
         placeholder="Tag"
+        defaultValue={nameTag}
       />
       <div className="flex gap-[17px]">
         <Button

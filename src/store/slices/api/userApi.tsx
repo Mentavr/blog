@@ -3,6 +3,8 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { setToken, setUserInfo } from '../authSlice';
 import { toast } from 'react-toastify';
 import { UserTypeResponse } from '../types.slices';
+import { errorsApiMessage } from '@/utils/constant/errors';
+import { articlesApi } from './articleApi';
 
 interface IError extends Error {
   status: number | string;
@@ -11,6 +13,7 @@ interface IError extends Error {
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: reduxBaseQuery,
+  tagTypes: ['User'],
   endpoints: (builder) => ({
     getLoginUser: builder.mutation({
       query: (params) => ({
@@ -27,11 +30,9 @@ export const userApi = createApi({
         } catch (error) {
           const { status } = error as IError;
 
-          if (status === 'FETCH_ERROR') {
-            toast.error('Ошибка запроса, проверте интернет соединение');
+          if (status === errorsApiMessage.FETCH_ERROR.name) {
+            toast.error(errorsApiMessage.FETCH_ERROR.message);
           }
-
-          console.error('Login failed:', error);
         }
       },
     }),
@@ -51,11 +52,9 @@ export const userApi = createApi({
         } catch (error) {
           const { status } = error as IError;
 
-          if (status === 'FETCH_ERROR') {
-            toast.error('Ошибка запроса, проверте интернет соединение');
+          if (status === errorsApiMessage.FETCH_ERROR.name) {
+            toast.error(errorsApiMessage.FETCH_ERROR.message);
           }
-
-          console.error('Login failed:', error);
         }
       },
     }),
@@ -72,18 +71,42 @@ export const userApi = createApi({
           const { data } = await queryFulfilled;
           dispatch(setToken(data.user.token));
           dispatch(setUserInfo(data.user));
+          dispatch(articlesApi.util.invalidateTags(['Articles']));
         } catch (error) {
           const { status } = error as IError;
 
-          if (status === 'FETCH_ERROR') {
-            toast.error('Ошибка запроса, проверте интернет соединение');
+          if (status === errorsApiMessage.FETCH_ERROR.name) {
+            toast.error(errorsApiMessage.FETCH_ERROR.message);
           }
+        }
+      },
+    }),
 
-          console.error('Login failed:', error);
+    updateUser: builder.mutation({
+      query: (params) => ({
+        url: '/user',
+        method: 'PUT',
+        body: { user: params },
+      }),
+
+      invalidatesTags: ['User'],
+
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setToken(data.user.token));
+          dispatch(setUserInfo(data.user));
+          dispatch(articlesApi.util.invalidateTags(['Articles']));
+        } catch (error) {
+          const { status } = error as IError;
+
+          if (status === errorsApiMessage.FETCH_ERROR.name) {
+            toast.error(errorsApiMessage.FETCH_ERROR.message);
+          }
         }
       },
     }),
   }),
 });
 
-export const { useGetLoginUserMutation, useGetSingUpMutation, useGetUserQuery } = userApi;
+export const { useGetLoginUserMutation, useGetSingUpMutation, useGetUserQuery, useUpdateUserMutation } = userApi;

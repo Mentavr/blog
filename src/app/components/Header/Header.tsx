@@ -7,6 +7,7 @@ import { type IUser, setToken, setUserInfo, getUserSelector } from '@/store/slic
 import { useAppSelector } from '@/utils/hooks/useAppSelector';
 import { staticImg } from '@/utils/constant/staticImg';
 import { useCookies } from 'react-cookie';
+import { articlesApi } from '@/store/slices/api/articleApi';
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -15,12 +16,11 @@ export const Header = () => {
   const { username, image } = useAppSelector(getUserSelector);
   const [_, __, removeCookie] = useCookies(['authToken']);
 
-  console.log('image', image);
-
   const handlerLogOut = () => {
     logOut();
     dispatch(setToken(''));
     dispatch(setUserInfo({} as IUser));
+    dispatch(articlesApi.util.invalidateTags(['Articles']));
     removeCookie('authToken');
   };
 

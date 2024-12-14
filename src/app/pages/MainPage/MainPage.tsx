@@ -1,5 +1,6 @@
 import { CardsArticles } from '@/app/components';
 import { useGetArticlesQuery } from '@/store/slices/api/articleApi';
+import { errorsApiMessage } from '@/utils/constant/errors';
 import { Spin } from 'antd';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -8,11 +9,10 @@ export const MainPage = () => {
   const [limit, setLimit] = useState<number>(10);
   const [offset, setOffset] = useState<number>(0);
 
-  const { data, isError, isLoading } = useGetArticlesQuery({ limit: limit, offset: offset });
-  console.log('isLoading', isLoading);
+  const { data, isError, isLoading, isFetching } = useGetArticlesQuery({ limit: limit, offset: offset });
+
   if (isError) {
-    console.error(isError);
-    toast.error('Проблема с сетью, попробуйте выключить vpn');
+    toast.error(errorsApiMessage.FETCH_ERROR.message);
   }
 
   return isLoading ? (
@@ -25,6 +25,7 @@ export const MainPage = () => {
       setLimit={setLimit}
       offset={offset}
       setOffset={setOffset}
+      isLoadingArticles={isFetching}
     />
   );
 };

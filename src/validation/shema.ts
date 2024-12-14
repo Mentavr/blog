@@ -1,4 +1,4 @@
-import { array, boolean, number, object, ref, string } from 'yup';
+import { array, boolean, object, ref, string } from 'yup';
 
 export const validation = {
   login: object({
@@ -36,9 +36,9 @@ export const validation = {
   profile: object({
     name: string().required('Обязательное поле'),
     email: string()
-      .email('Не верный email')
-      .matches(/^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Не верный email')
-      .required('Обязательное поле'),
+      .required('Обязательное поле')
+      .matches(/^[^A-Z]*$/, 'Email не должен содержать заглавных букв')
+      .matches(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/, 'Не верный email'),
     password: string()
       .min(6, 'Минимальная длина пароля — 6 символов')
       .max(40, 'Пароль не должен превышать 40 символов')
@@ -46,12 +46,20 @@ export const validation = {
       .matches(/[A-ZА-Я]/, 'Пароль должен содержать хотя бы одну заглавную букву')
       .matches(/\d/, 'Пароль должен содержать хотя бы одну цифру')
       .required('Обязательное поле'),
-    avatar: string().required('Обязательное поле'),
+    avatar: string()
+      .matches(/^(https?:\/\/(?:www\.)?[^\s\/$.?#]+\.[^\s]{2,})(\/[^\s]*)?$/i, 'Некорректный URL-адрес')
+      .nullable(),
   }),
   edit: object({
     title: string().required('Обязательное поле'),
     desc: string().required('Обязательное поле'),
     body: string().required('Обязательное поле'),
-    tags: array().of(string()),
+    tags: array().of(
+      string()
+        .min(2, 'Тег должен быть длиной не менее 2 символов')
+        .max(20, 'Тег не должен превышать 20 символов')
+        .matches(/^[a-zA-Zа-яА-Я0-9]+$/, 'Тег может содержать только буквы и цифры')
+        .required()
+    ),
   }),
 };

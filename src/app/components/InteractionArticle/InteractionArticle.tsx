@@ -7,14 +7,15 @@ import { useNavigate } from 'react-router-dom';
 import { AddTag } from './components/AddTag';
 import { inputTrim } from '@/utils/helpers/inputTrim';
 import { generateUniqueId } from '@/utils/helpers/generateUniqueId';
-import { useCreateArticleMutation } from '@/store/slices/api/articleApi';
+import { useCreateArticleMutation, useUpdateArticleMutation } from '@/store/slices/api/articleApi';
 import { routs } from '@/utils/constant/routes';
+import { toast } from 'react-toastify';
 
 interface FormType {
   title: string;
   desc: string;
   body: string;
-  tags?: TagsArticleType[];
+  tags?: string[];
 }
 
 interface InteractionArticleProps {
@@ -24,6 +25,12 @@ interface InteractionArticleProps {
   body?: string;
   slug?: string;
 }
+
+interface IError {
+  originalStatus: number | string;
+  status: number | string;
+}
+
 export interface TagsArticleType {
   nameTag: string;
   idArticle: string;
@@ -44,21 +51,58 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
 
   const [tagsArticle, setTagsArticle] = useState<TagsArticleType[]>(tagsArticleArray);
 
-  const [createArticle, {}] = useCreateArticleMutation();
+  const [createArticle, { isLoading: isLoadingCreate }] = useCreateArticleMutation();
+  const [updateArticle, { isLoading: isLoadingUpdate }] = useUpdateArticleMutation();
 
   const onSubmit = async (data: FormType) => {
-    console.log('data ==>> !!', data);
     const { title, desc, body, tags } = data;
-    console.log(tags);
-    try {
-      createArticle({
-        title: title,
-        description: desc,
-        body: body,
-        tagList: tags,
-      });
-      navigate(routs.ARTICLE);
-    } catch (error) {}
+    if (!slug) {
+      try {
+        await createArticle({
+          title: title,
+          description: desc,
+          body: body,
+          tagList: tags,
+        });
+        navigate(routs.ARTICLE);
+      } catch (error) {
+        const { status } = error as IError;
+
+        if (status === 'FETCH_ERROR') {
+          toast.error('Ошибка зароса, проверьте интернет соединение или выключите VPN');
+        }
+
+        if (status === 402) {
+          toast.error('У вас нет прав изменять этот пост');
+          navigate(routs.ARTICLE);
+        }
+      }
+    }
+    if (slug) {
+      try {
+        await updateArticle({
+          slug,
+          params: {
+            title: title,
+            description: desc,
+            body: body,
+            tagList: tags,
+          },
+        }).unwrap();
+        navigate(routs.ARTICLE);
+      } catch (error) {
+        const { originalStatus, status } = error as IError;
+
+        if (status === 'FETCH_ERROR') {
+          toast.error('Ошибка зароса, проверьте интернет соединение или выключите VPN');
+        }
+
+        if (originalStatus === 403) {
+          toast.error('У вас нет прав изменять этот пост');
+          navigate(routs.ARTICLE);
+        }
+      }
+    }
   };
 
   useEffect(() => {
@@ -66,12 +110,13 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
     setValue('tags', tagsStringArticle);
   }, [tagsArticle]);
 
-  //   return isLoading ? (
-  //     <Spin className='absolute inset-0 top-2/4' size="large" />
-  //   ) : (
-  return (
+  return isLoadingCreate || isLoadingUpdate ? (
+    <Spin className="absolute inset-0 top-2/4" size="large" />
+  ) : (
     <div className="py-[48px] px-[32px] border border-normalColor rounded-[6px] bg-backgroundColorBase shadow-myShadow mx-auto mt-[59px] mb-[239px] text-center">
-      <h1 className="weight-500 text-[20px] text-[#262626] mb-[20px]">Create new account</h1>
+      <h1 className="weight-500 text-[20px] text-[#262626] mb-[20px]">
+        {slug ? 'Edit article' : 'Create new account'}
+      </h1>
       <Form layout={'vertical'} onFinish={handleSubmit(onSubmit)}>
         <Form.Item className="mb-[20px]" label="Title">
           <Controller
@@ -135,19 +180,26 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
               />
             )}
           />
-          {errors.text && (
+          {errors.body && (
             <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.text.message}
+              {errors.body.message}
             </span>
           )}
         </Form.Item>
 
         <Form.Item className="mb-[20px]" label="Tag">
           <div className="flex flex-col gap-[5px]">
-            {tagsArticle.map(({ idArticle }) => {
+            {tagsArticle.map(({ nameTag, idArticle }, index) => {
+              const error = errors.tags?.[index]?.message;
               return (
-                <div className="flex gap-[17px] ">
-                  <AddTag idArticle={idArticle} setTagsArticle={setTagsArticle} tagsArticle={tagsArticle} />
+                <div key={idArticle} className="flex gap-[17px] flex-col gap-[5px] text-start">
+                  <AddTag
+                    nameTag={nameTag}
+                    idArticle={idArticle}
+                    setTagsArticle={setTagsArticle}
+                    tagsArticle={tagsArticle}
+                  />
+                  {error && <span className="text-errorColor text-[14px] w-full">{error}</span>}
                 </div>
               );
             })}

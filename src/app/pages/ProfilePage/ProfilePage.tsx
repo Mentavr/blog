@@ -1,9 +1,25 @@
 import { Button } from '@/app/components';
+import { useUpdateUserMutation } from '@/store/slices/api/userApi';
+import { errorsApiMessage } from '@/utils/constant/errors';
+import { routs } from '@/utils/constant/routes';
 import { inputTrim } from '@/utils/helpers/inputTrim';
 import { validation } from '@/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Input } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+interface FormType {
+  email: string;
+  name: string;
+  password: string;
+  avatar?: null | string;
+}
+
+interface IError {
+  status: string | number;
+}
 
 export const ProfilePage = () => {
   const {
@@ -12,8 +28,28 @@ export const ProfilePage = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(validation.profile) });
 
-  const onSubmit = (data: any) => {
-    console.log('Form Data:', data);
+  const navigate = useNavigate();
+  const [updateUser] = useUpdateUserMutation();
+
+  const onSubmit = async (data: FormType) => {
+    const { email, name, password, avatar } = data;
+    const requestObjectWithAvatar = { email: email, username: name, password: password, image: avatar };
+    const requestObjectWithOutAvatar = { email: email, username: name, password: password };
+
+    try {
+      await updateUser(avatar ? requestObjectWithAvatar : requestObjectWithOutAvatar).unwrap();
+      navigate(routs.ARTICLE);
+    } catch (error) {
+      const { status } = error as IError;
+
+      if (status === errorsApiMessage[422].name) {
+        toast.error(errorsApiMessage[422].message.profile);
+      }
+
+      if (status === errorsApiMessage.FETCH_ERROR.name) {
+        toast.error(errorsApiMessage.FETCH_ERROR.message);
+      }
+    }
   };
 
   return (
@@ -93,10 +129,11 @@ export const ProfilePage = () => {
           <Controller
             name="avatar"
             control={control}
-            defaultValue=""
+            defaultValue={null}
             render={({ field }) => (
               <Input
                 {...field}
+                value={field.value || ''}
                 onInput={(e) => inputTrim(e, field.value)}
                 className="h-[40] rounder-[4px]"
                 size="large"

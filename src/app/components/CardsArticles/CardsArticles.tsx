@@ -9,10 +9,18 @@ interface ArticlesProps {
   limit: number;
   setLimit: (e: number) => void;
   setOffset: (e: number) => void;
+  isLoadingArticles: boolean;
   offset?: number;
 }
 
-export const CardsArticles = ({ articles, articlesCount, limit, setLimit, setOffset }: ArticlesProps) => {
+export const CardsArticles = ({
+  articles,
+  articlesCount,
+  limit,
+  setLimit,
+  setOffset,
+  isLoadingArticles,
+}: ArticlesProps) => {
   if (!articles) return;
 
   const handlerChangePage = (page: number, pageSize: number) => {
@@ -37,6 +45,8 @@ export const CardsArticles = ({ articles, articlesCount, limit, setLimit, setOff
             tags={article.tagList}
             likes={article.favoritesCount}
             slug={article.slug}
+            favorited={article.favorited}
+            isLoadingArticles={isLoadingArticles}
           />
         );
       })}

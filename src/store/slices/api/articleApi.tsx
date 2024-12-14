@@ -1,6 +1,8 @@
 import { reduxBaseQuery } from '@/configs/reduxBaseQuery';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { ArticleTypeRequest, ArticleTypeResponse, ArticlesTypeRequest, ArticlesTypeResponse } from '../types.slices';
+import { errorsApiMessage } from '@/utils/constant/errors';
+import { toast } from 'react-toastify';
 
 export const articlesApi = createApi({
   reducerPath: 'articlesApi',
@@ -19,7 +21,8 @@ export const articlesApi = createApi({
       query: (params) => ({
         url: `/articles/${params.slug}`,
       }),
-      providesTags: (_, __, { slug }) => [{ type: 'Article', id: slug }],
+      keepUnusedDataFor: 0,
+      // providesTags: (_, __, { slug }) => [{ type: 'Article', id: slug }],
     }),
 
     deleteArticle: builder.mutation({
@@ -38,8 +41,42 @@ export const articlesApi = createApi({
       }),
       invalidatesTags: ['Articles'],
     }),
+
+    updateArticle: builder.mutation({
+      query: ({ slug, params }) => ({
+        url: `/articles/${slug}`,
+        method: 'PUT',
+        body: { article: params },
+      }),
+      invalidatesTags: (_, __, slug) => [{ type: 'Article', id: slug }, 'Articles'],
+    }),
+
+    favoriteArticle: builder.mutation({
+      query: (slug) => ({
+        url: `/articles/${slug}/favorite`,
+        method: 'POST',
+      }),
+
+      invalidatesTags: (_, __, slug) => [{ type: 'Article', id: slug }, 'Articles'],
+    }),
+
+    unFavoriteArticle: builder.mutation({
+      query: (slug) => ({
+        url: `/articles/${slug}/favorite`,
+        method: 'DELETE',
+      }),
+
+      invalidatesTags: (_, __, slug) => [{ type: 'Article', id: slug }, 'Articles'],
+    }),
   }),
 });
 
-export const { useGetArticlesQuery, useGetArticleQuery, useDeleteArticleMutation, useCreateArticleMutation } =
-  articlesApi;
+export const {
+  useGetArticlesQuery,
+  useGetArticleQuery,
+  useDeleteArticleMutation,
+  useCreateArticleMutation,
+  useUpdateArticleMutation,
+  useFavoriteArticleMutation,
+  useUnFavoriteArticleMutation,
+} = articlesApi;
