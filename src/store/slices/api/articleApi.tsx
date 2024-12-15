@@ -20,7 +20,7 @@ export const articlesApi = createApi({
         url: `/articles/${params.slug}`,
       }),
       keepUnusedDataFor: 0,
-      // providesTags: (_, __, { slug }) => [{ type: 'Article', id: slug }],
+      providesTags: (_, __, { slug }) => [{ type: 'Article', id: slug }],
     }),
 
     deleteArticle: builder.mutation({

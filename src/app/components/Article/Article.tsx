@@ -46,7 +46,6 @@ export const Article = () => {
       favorited ? await unFavorite(slug).unwrap() : await favorite(slug).unwrap();
     } catch (error) {
       const { status } = error as IError;
-      console.log('===> ', error);
       if (status === errorsApiMessage[401].name) {
         toast.error(errorsApiMessage[401].message);
       }
