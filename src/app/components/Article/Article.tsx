@@ -19,6 +19,7 @@ import { errorsApiMessage } from '@/utils/constant/errors';
 import { formatDate } from '@/utils/helpers/formatDate';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import './style.modal.css';
 
 interface IError {
   originalStatus: number | string;
@@ -166,7 +167,20 @@ export const Article = () => {
         </div>
       </header>
       <main className="flex gap-[12px] flex-col">
-        <Markdown remarkPlugins={[[remarkGfm, { singleTilde: false }]]} rehypePlugins={[rehypeRaw]}>
+        <Markdown
+          remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+          rehypePlugins={[rehypeRaw]}
+          components={{
+            ul: ({ node, ...props }) => <ul className="ulCls" {...props} />,
+            ol: ({ node, ...props }) => <ol className="olCls" {...props} />,
+            li: ({ node, ...props }) => <li className="liCls" {...props} />,
+            h2: ({ node, ...props }) => <h2 className="h2Cls" {...props} />,
+            h3: ({ node, ...props }) => <h3 className="h3Cls" {...props} />,
+            h4: ({ node, ...props }) => <h4 className="h4Cls" {...props} />,
+            h5: ({ node, ...props }) => <h5 className="h5Cls" {...props} />,
+            h6: ({ node, ...props }) => <h6 className="h6Cls" {...props} />,
+          }}
+        >
           {body}
         </Markdown>
       </main>
