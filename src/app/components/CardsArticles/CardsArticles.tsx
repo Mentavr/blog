@@ -28,7 +28,7 @@ export const CardsArticles = ({
     if (page === 1) {
       return setOffset(0);
     }
-    setOffset(pageSize * page);
+    setOffset(pageSize + page);
   };
 
   return (
