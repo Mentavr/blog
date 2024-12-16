@@ -1,4 +1,4 @@
-import { validation } from '@/validation/shema';
+import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Form, Input, Spin } from 'antd';
 import { useEffect, useState } from 'react';

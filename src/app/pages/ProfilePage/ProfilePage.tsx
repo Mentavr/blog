@@ -3,7 +3,7 @@ import { useUpdateUserMutation } from '@/store/slices/api/userApi';
 import { errorsApiMessage } from '@/utils/constant/errors';
 import { routs } from '@/utils/constant/routes';
 import { inputTrim } from '@/utils/helpers/inputTrim';
-import { validation } from '@/validation/shema';
+import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Input } from 'antd';
 import { Controller, useForm } from 'react-hook-form';

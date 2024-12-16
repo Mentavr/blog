@@ -4,7 +4,7 @@ import { errorsApiMessage } from '@/utils/constant/errors';
 import { routs } from '@/utils/constant/routes';
 import { inputTrim } from '@/utils/helpers/inputTrim';
 import { useAuth } from '@/utils/hooks/useAuth';
-import { validation } from '@/validation/shema';
+import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Input, Spin } from 'antd';
 import { useCookies } from 'react-cookie';

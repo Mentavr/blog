@@ -2,7 +2,7 @@ import { Button } from '@/app/components';
 import { useGetSingUpMutation } from '@/store/slices/api/userApi';
 import { routs } from '@/utils/constant/routes';
 import { useAuth } from '@/utils/hooks/useAuth';
-import { validation } from '@/validation/shema';
+import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Checkbox, Form, Input } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
