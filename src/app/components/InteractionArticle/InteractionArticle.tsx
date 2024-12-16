@@ -74,8 +74,8 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
         }
 
         if (status === 402) {
+          navigate(-1);
           toast.error('У вас нет прав изменять этот пост');
-          navigate(routs.ARTICLE);
         }
       }
     }
