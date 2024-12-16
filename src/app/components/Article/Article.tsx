@@ -19,7 +19,7 @@ import { errorsApiMessage } from '@/utils/constant/errors';
 import { formatDate } from '@/utils/helpers/formatDate';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import './style.modal.css';
+import './style.module.css';
 
 interface IError {
   originalStatus: number | string;

@@ -3,6 +3,7 @@ import { useGetUserQuery } from '@/store/slices/api/userApi';
 
 import { routs } from '@/utils/constant/routes';
 import { useAuth } from '@/utils/hooks/useAuth';
+import { Spin } from 'antd';
 import { useEffect } from 'react';
 import { Cookies, withCookies } from 'react-cookie';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -17,15 +18,13 @@ export const Layout = withCookies(({ cookies }: LayoutProps) => {
   const location = useLocation();
 
   const token = cookies.get('authToken');
-  const { error } = useGetUserQuery(token, { skip: !token });
+  const { error, isLoading } = useGetUserQuery(token, { skip: !token });
 
   useEffect(() => {
     if (token && !error) {
       login();
     }
-  }, [token, login]);
 
-  useEffect(() => {
     if (location.pathname === routs.MAIN) {
       navigate(routs.ARTICLE);
     }
@@ -45,7 +44,7 @@ export const Layout = withCookies(({ cookies }: LayoutProps) => {
       </div>
       <div className="xl:max-w-[1400px] max-w-[764px] mx-auto ">
         <div className="xl:w-[67%] w-[88%] mx-auto">
-          <Outlet />
+          {isLoading ? <Spin className="absolute inset-0 top-2/4" size="large" /> : <Outlet />}
         </div>
       </div>
     </div>
