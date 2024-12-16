@@ -21,7 +21,7 @@ interface FormType {
 interface InteractionArticleProps {
   description?: string;
   title?: string;
-  tags?: string[];
+  tags: string[];
   body?: string;
   slug?: string;
 }
@@ -45,9 +45,10 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
   } = useForm({ resolver: yupResolver(validation.edit) });
   const navigate = useNavigate();
 
-  const tagsArticleArray = tags
-    ? tags.map((elem) => ({ nameTag: elem, idArticle: generateUniqueId() }))
-    : [{ nameTag: '', idArticle: generateUniqueId() }];
+  const tagsArticleArray =
+    tags.length > 0
+      ? tags?.map((elem) => ({ nameTag: elem, idArticle: generateUniqueId() }))
+      : [{ nameTag: '', idArticle: generateUniqueId() }];
 
   const [tagsArticle, setTagsArticle] = useState<TagsArticleType[]>(tagsArticleArray);
 

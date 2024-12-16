@@ -12,7 +12,6 @@ interface AddTagProps {
 
 export const AddTag = ({ nameTag, idArticle, tagsArticle, setTagsArticle }: AddTagProps) => {
   const [value, setValueInput] = useState<string>(nameTag);
-
   const isLast = tagsArticle[tagsArticle.length - 1].idArticle === idArticle;
 
   const handlerDeleteArticle = (id: string) => {

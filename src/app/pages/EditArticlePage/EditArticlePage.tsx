@@ -20,7 +20,7 @@ export const EditArticlePage = () => {
       title={data?.article.title}
       slug={data?.article.slug}
       body={data?.article.body}
-      tags={data?.article.tagList}
+      tags={data?.article.tagList ?? []}
     />
   );
 };
