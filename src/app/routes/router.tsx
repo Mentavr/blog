@@ -18,19 +18,6 @@ export const router = createBrowserRouter([
     path: routs.MAIN,
     children: [
       {
-        element: <Outlet />,
-        children: [
-          {
-            path: routs.ARTICLE,
-            element: <MainPage />,
-          },
-          {
-            path: `${routs.ARTICLE}/:slug`,
-            element: <ArticlePage />,
-          },
-        ],
-      },
-      {
         element: <PrivateRoute />,
         children: [
           { path: `${routs.ARTICLE}/:slug${routs.EDITARTICLE}`, element: <EditArticlePage /> },
@@ -43,6 +30,14 @@ export const router = createBrowserRouter([
         children: [
           { path: routs.LOGIN, element: <LoginPage /> },
           { path: routs.SIGNUP, element: <SignUpPage /> },
+          {
+            path: routs.ARTICLE,
+            element: <MainPage />,
+          },
+          {
+            path: `${routs.ARTICLE}/:slug`,
+            element: <ArticlePage />,
+          },
         ],
       },
     ],

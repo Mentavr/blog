@@ -5,7 +5,7 @@ import { routs } from '@/utils/constant/routes';
 import { useAuth } from '@/utils/hooks/useAuth';
 import { useEffect } from 'react';
 import { Cookies, withCookies } from 'react-cookie';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 interface LayoutProps {
   cookies: Cookies;
@@ -14,6 +14,7 @@ interface LayoutProps {
 export const Layout = withCookies(({ cookies }: LayoutProps) => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const location = useLocation();
 
   const token = cookies.get('authToken');
   const { error } = useGetUserQuery(token, { skip: !token });
@@ -25,8 +26,10 @@ export const Layout = withCookies(({ cookies }: LayoutProps) => {
   }, [token, login]);
 
   useEffect(() => {
-    navigate(routs.ARTICLE);
-  }, [navigate]);
+    if (location.pathname === routs.MAIN) {
+      navigate(routs.ARTICLE);
+    }
+  }, []);
 
   useEffect(() => {
     if (error) {
