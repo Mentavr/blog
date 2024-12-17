@@ -2,6 +2,8 @@ import { ArticleType } from '@/store/slices/types.slices';
 
 import { Pagination } from 'antd';
 import { CardArticle } from '..';
+import { getElemToSessionStorage } from '@/utils/helpers/getElemToSessionStorage';
+import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
 
 interface ArticlesProps {
   articles?: ArticleType[];
@@ -23,7 +25,10 @@ export const CardsArticles = ({
 }: ArticlesProps) => {
   if (!articles) return;
 
+  const pageSession = getElemToSessionStorage('page');
+
   const handlerChangePage = (page: number, pageSize: number) => {
+    setElemToSessionStorage('page', page);
     setLimit(pageSize);
     if (page === 1) {
       return setOffset(0);
@@ -56,6 +61,7 @@ export const CardsArticles = ({
         total={articlesCount}
         onChange={handlerChangePage}
         pageSize={limit}
+        defaultCurrent={pageSession ?? 1}
       />
     </div>
   );

@@ -1,13 +1,29 @@
 import { CardsArticles } from '@/app/components';
 import { useGetArticlesQuery } from '@/store/slices/api/articleApi';
 import { errorsApiMessage } from '@/utils/constant/errors';
+import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
+import { getElemToSessionStorage } from '@/utils/helpers/getElemToSessionStorage';
 import { Spin } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export const MainPage = () => {
   const [limit, setLimit] = useState<number>(10);
   const [offset, setOffset] = useState<number>(0);
+
+  useEffect(() => {
+    const limitSession = getElemToSessionStorage('limit');
+    const offsetSession = getElemToSessionStorage('offset');
+    if (limitSession && offsetSession) {
+      setLimit(limitSession);
+      setOffset(offsetSession);
+    }
+  }, []);
+
+  useEffect(() => {
+    setElemToSessionStorage('limit', limit);
+    setElemToSessionStorage('offset', offset);
+  }, [limit, offset]);
 
   const { data, isError, isLoading, isFetching } = useGetArticlesQuery({ limit: limit, offset: offset });
 

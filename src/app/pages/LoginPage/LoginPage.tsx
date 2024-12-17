@@ -3,6 +3,7 @@ import { useGetLoginUserMutation } from '@/store/slices/api/userApi';
 import { errorsApiMessage } from '@/utils/constant/errors';
 import { routs } from '@/utils/constant/routes';
 import { inputTrim } from '@/utils/helpers/inputTrim';
+import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
 import { useAuth } from '@/utils/hooks/useAuth';
 import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -47,6 +48,9 @@ export const LoginPage = () => {
       setCookie('authToken', data.user.token);
       login();
       navigate(routs.ARTICLE);
+      setElemToSessionStorage('page', 1);
+      setElemToSessionStorage('limit', 10);
+      setElemToSessionStorage('offset', 0);
     } catch (error) {
       const { status } = error as IError;
 
@@ -74,7 +78,7 @@ export const LoginPage = () => {
             render={({ field }) => (
               <Input
                 {...field}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="rounder-[4px]"
                 size="large"
                 placeholder="Email address"
@@ -97,7 +101,7 @@ export const LoginPage = () => {
             render={({ field }) => (
               <Input.Password
                 {...field}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="h-[40] rounder-[4px]"
                 size="large"
                 placeholder="Password"

@@ -12,6 +12,7 @@ import { Spin } from 'antd';
 import { useCookies } from 'react-cookie';
 import { inputTrim } from '@/utils/helpers/inputTrim';
 import { errorsApiMessage } from '@/utils/constant/errors';
+import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
 
 interface FormType {
   name: string;
@@ -51,6 +52,9 @@ export const SignUpPage = () => {
       setCookie('authToken', data.user.token);
       login();
       navigate(routs.ARTICLE);
+      setElemToSessionStorage('page', 1);
+      setElemToSessionStorage('limit', 10);
+      setElemToSessionStorage('offset', 0);
     } catch (error) {
       const { status } = error as IError;
 
@@ -77,7 +81,7 @@ export const SignUpPage = () => {
             defaultValue=""
             render={({ field }) => (
               <Input
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 {...field}
                 className="rounder-[4px]"
                 size="large"
@@ -101,7 +105,7 @@ export const SignUpPage = () => {
             render={({ field }) => (
               <Input
                 {...field}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="rounder-[4px]"
                 size="large"
                 placeholder="Email address"
@@ -124,7 +128,7 @@ export const SignUpPage = () => {
             render={({ field }) => (
               <Input.Password
                 {...field}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="h-[40] rounder-[4px]"
                 size="large"
                 placeholder="Password"
@@ -147,7 +151,7 @@ export const SignUpPage = () => {
             render={({ field }) => (
               <Input.Password
                 {...field}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="h-[40] rounder-[4px]"
                 size="large"
                 placeholder="Password"

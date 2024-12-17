@@ -1,8 +1,5 @@
-export const inputTrim = (e: any, value?: string | null) => {
-  if (!value) return;
-
+export const inputTrim = (e: any) => {
   if (e.target.value === ' ') {
-    e.target.value = e.target.value.trim();
-    value = e.target.value.trim();
+    e.target.value = '';
   }
 };

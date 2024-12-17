@@ -10,6 +10,7 @@ import { generateUniqueId } from '@/utils/helpers/generateUniqueId';
 import { useCreateArticleMutation, useUpdateArticleMutation } from '@/store/slices/api/articleApi';
 import { routs } from '@/utils/constant/routes';
 import { toast } from 'react-toastify';
+import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
 
 interface FormType {
   title: string;
@@ -66,6 +67,9 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
           tagList: tags,
         });
         navigate(routs.ARTICLE);
+        setElemToSessionStorage('page', 1);
+        setElemToSessionStorage('limit', 10);
+        setElemToSessionStorage('offset', 0);
       } catch (error) {
         const { status } = error as IError;
 
@@ -126,7 +130,7 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
             defaultValue={title ? title : ''}
             render={({ field }) => (
               <Input
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 {...field}
                 className="rounder-[4px]"
                 size="large"
@@ -150,7 +154,7 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
             render={({ field }) => (
               <Input
                 {...field}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="rounder-[4px]"
                 size="large"
                 placeholder="Short description"
@@ -173,7 +177,7 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
             render={({ field }) => (
               <Input.TextArea
                 {...field}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="h-[40] rounder-[4px]"
                 size="large"
                 placeholder="Text"

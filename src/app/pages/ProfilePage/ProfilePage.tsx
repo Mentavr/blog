@@ -3,6 +3,7 @@ import { useUpdateUserMutation } from '@/store/slices/api/userApi';
 import { errorsApiMessage } from '@/utils/constant/errors';
 import { routs } from '@/utils/constant/routes';
 import { inputTrim } from '@/utils/helpers/inputTrim';
+import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
 import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Input } from 'antd';
@@ -39,6 +40,9 @@ export const ProfilePage = () => {
     try {
       await updateUser(avatar ? requestObjectWithAvatar : requestObjectWithOutAvatar).unwrap();
       navigate(routs.ARTICLE);
+      setElemToSessionStorage('page', 1);
+      setElemToSessionStorage('limit', 10);
+      setElemToSessionStorage('offset', 0);
     } catch (error) {
       const { status } = error as IError;
 
@@ -63,7 +67,7 @@ export const ProfilePage = () => {
             defaultValue=""
             render={({ field }) => (
               <Input
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 {...field}
                 className="rounder-[4px]"
                 size="large"
@@ -87,7 +91,7 @@ export const ProfilePage = () => {
             render={({ field }) => (
               <Input
                 {...field}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="rounder-[4px]"
                 size="large"
                 placeholder="Email address"
@@ -110,7 +114,7 @@ export const ProfilePage = () => {
             render={({ field }) => (
               <Input.Password
                 {...field}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="h-[40] rounder-[4px]"
                 size="large"
                 placeholder="New password"
@@ -134,7 +138,7 @@ export const ProfilePage = () => {
               <Input
                 {...field}
                 value={field.value || ''}
-                onInput={(e) => inputTrim(e, field.value)}
+                onInput={inputTrim}
                 className="h-[40] rounder-[4px]"
                 size="large"
                 placeholder="Avatar image"

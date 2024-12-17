@@ -19,7 +19,8 @@ import { errorsApiMessage } from '@/utils/constant/errors';
 import { formatDate } from '@/utils/helpers/formatDate';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import './style.module.css';
+import '@/app/components/Article/style.module.css';
+import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
 
 interface IError {
   originalStatus: number | string;
@@ -69,6 +70,9 @@ export const Article = () => {
 
       await deleteArticle(slug).unwrap();
       navigate(routs.ARTICLE);
+      setElemToSessionStorage('page', 1);
+      setElemToSessionStorage('limit', 10);
+      setElemToSessionStorage('offset', 0);
     } catch (error) {
       const { originalStatus } = error as IError;
 
