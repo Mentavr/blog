@@ -1,15 +1,15 @@
 import { CardsArticles } from '@/app/components';
 import { useGetArticlesQuery } from '@/store/slices/api/articleApi';
 import { errorsApiMessage } from '@/utils/constant/errors';
-import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
-import { getElemToSessionStorage } from '@/utils/helpers/getElemToSessionStorage';
 import { Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { sessionStore } from '@/utils/helpers/sessionStore';
 
 export const MainPage = () => {
   const [limit, setLimit] = useState<number>(10);
   const [offset, setOffset] = useState<number>(0);
+  const { setElemToSessionStorage, getElemToSessionStorage } = sessionStore();
 
   useEffect(() => {
     const limitSession = getElemToSessionStorage('limit');

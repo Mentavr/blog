@@ -10,7 +10,8 @@ import { generateUniqueId } from '@/utils/helpers/generateUniqueId';
 import { useCreateArticleMutation, useUpdateArticleMutation } from '@/store/slices/api/articleApi';
 import { routs } from '@/utils/constant/routes';
 import { toast } from 'react-toastify';
-import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
+import { sessionStore } from '@/utils/helpers/sessionStore';
+import { localStore } from '@/utils/helpers/localStorage';
 
 interface FormType {
   title: string;
@@ -20,10 +21,6 @@ interface FormType {
 }
 
 interface InteractionArticleProps {
-  description?: string;
-  title?: string;
-  tags: string[];
-  body?: string;
   slug?: string;
 }
 
@@ -37,21 +34,39 @@ export interface TagsArticleType {
   idArticle: string;
 }
 
-export const InteractionArticle = ({ description, title, tags, slug, body }: InteractionArticleProps) => {
+export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
+  const { setElemToSessionStorage } = sessionStore();
+  const { removeElemToLocalStorage, getElemToLocalStorage, setElemToLocalStorage } = localStore();
+
+  const { desc, title, tags, body } = slug
+    ? getElemToLocalStorage('editArticleOptions')
+    : getElemToLocalStorage('createArticleOptions');
+  console.log(desc);
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm({ resolver: yupResolver(validation.edit) });
+    getValues,
+  } = useForm({
+    resolver: yupResolver(validation.edit),
+    defaultValues: {
+      title: title,
+      desc: desc,
+      tags: tags,
+      body: body,
+    },
+  });
+
   const navigate = useNavigate();
 
-  const tagsArticleArray =
+  const initialTagsArticleArray =
     tags.length > 0
-      ? tags?.map((elem) => ({ nameTag: elem, idArticle: generateUniqueId() }))
+      ? tags?.map((elem: any) => ({ nameTag: elem, idArticle: generateUniqueId() }))
       : [{ nameTag: '', idArticle: generateUniqueId() }];
 
-  const [tagsArticle, setTagsArticle] = useState<TagsArticleType[]>(tagsArticleArray);
+  const [tagsArticle, setTagsArticle] = useState<TagsArticleType[]>(initialTagsArticleArray);
 
   const [createArticle, { isLoading: isLoadingCreate }] = useCreateArticleMutation();
   const [updateArticle, { isLoading: isLoadingUpdate }] = useUpdateArticleMutation();
@@ -70,6 +85,8 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
         setElemToSessionStorage('page', 1);
         setElemToSessionStorage('limit', 10);
         setElemToSessionStorage('offset', 0);
+        removeElemToLocalStorage('editArticleOptions');
+        removeElemToLocalStorage('createArticleOptions');
       } catch (error) {
         const { status } = error as IError;
 
@@ -79,6 +96,8 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
 
         if (status === 402) {
           navigate(-1);
+          removeElemToLocalStorage('editArticleOptions');
+          removeElemToLocalStorage('createArticleOptions');
           toast.error('У вас нет прав изменять этот пост');
         }
       }
@@ -95,6 +114,8 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
           },
         }).unwrap();
         navigate(routs.ARTICLE);
+        removeElemToLocalStorage('editArticleOptions');
+        removeElemToLocalStorage('createArticleOptions');
       } catch (error) {
         const { originalStatus, status } = error as IError;
 
@@ -104,15 +125,31 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
 
         if (originalStatus === 403) {
           toast.error('У вас нет прав изменять этот пост');
-          navigate(routs.ARTICLE);
+          navigate(-1);
+          removeElemToLocalStorage('editArticleOptions');
+          removeElemToLocalStorage('createArticleOptions');
         }
       }
     }
   };
 
+  const setProperty = (
+    values: { title?: string; desc?: string; body?: string; tags?: string[] },
+    slug: string | null
+  ) => {
+    console.log('values', values);
+    const valuesStorage = JSON.stringify({
+      ...values,
+    });
+    slug
+      ? setElemToLocalStorage('editArticleOptions', valuesStorage)
+      : setElemToLocalStorage('createArticleOptions', valuesStorage);
+  };
+
   useEffect(() => {
     const tagsStringArticle = tagsArticle.map(({ nameTag }) => nameTag).filter((elem) => elem.length > 0);
     setValue('tags', tagsStringArticle);
+    setProperty(getValues(), slug ? slug : null);
   }, [tagsArticle]);
 
   return isLoadingCreate || isLoadingUpdate ? (
@@ -127,17 +164,19 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
           <Controller
             name="title"
             control={control}
-            defaultValue={title ? title : ''}
-            render={({ field }) => (
-              <Input
-                onInput={inputTrim}
-                {...field}
-                className="rounder-[4px]"
-                size="large"
-                placeholder="Title"
-                status={errors.title && 'error'}
-              />
-            )}
+            render={({ field }) => {
+              setProperty(getValues(), slug ? slug : null);
+              return (
+                <Input
+                  {...field}
+                  onInput={inputTrim}
+                  className="rounder-[4px]"
+                  size="large"
+                  placeholder="Title"
+                  status={errors.title && 'error'}
+                />
+              );
+            }}
           />
           {errors.title && (
             <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
@@ -150,17 +189,19 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
           <Controller
             name="desc"
             control={control}
-            defaultValue={description ? description : ''}
-            render={({ field }) => (
-              <Input
-                {...field}
-                onInput={inputTrim}
-                className="rounder-[4px]"
-                size="large"
-                placeholder="Short description"
-                status={errors.desc && 'error'}
-              />
-            )}
+            render={({ field }) => {
+              setProperty(getValues(), slug ? slug : null);
+              return (
+                <Input
+                  {...field}
+                  onInput={inputTrim}
+                  className="rounder-[4px]"
+                  size="large"
+                  placeholder="Short description"
+                  status={errors.desc && 'error'}
+                />
+              );
+            }}
           />
           {errors.desc && (
             <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
@@ -173,17 +214,19 @@ export const InteractionArticle = ({ description, title, tags, slug, body }: Int
           <Controller
             name="body"
             control={control}
-            defaultValue={body ? body : ''}
-            render={({ field }) => (
-              <Input.TextArea
-                {...field}
-                onInput={inputTrim}
-                className="h-[40] rounder-[4px]"
-                size="large"
-                placeholder="Text"
-                status={errors.body && 'error'}
-              />
-            )}
+            render={({ field }) => {
+              setProperty(getValues(), slug ? slug : null);
+              return (
+                <Input.TextArea
+                  {...field}
+                  onInput={inputTrim}
+                  className="h-[40] rounder-[4px]"
+                  size="large"
+                  placeholder="Text"
+                  status={errors.body && 'error'}
+                />
+              );
+            }}
           />
           {errors.body && (
             <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">

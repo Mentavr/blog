@@ -3,7 +3,7 @@ import { useGetLoginUserMutation } from '@/store/slices/api/userApi';
 import { errorsApiMessage } from '@/utils/constant/errors';
 import { routs } from '@/utils/constant/routes';
 import { inputTrim } from '@/utils/helpers/inputTrim';
-import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
+import { sessionStore } from '@/utils/helpers/sessionStore';
 import { useAuth } from '@/utils/hooks/useAuth';
 import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -34,6 +34,7 @@ export const LoginPage = () => {
   const [signIn, { isLoading }] = useGetLoginUserMutation();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { setElemToSessionStorage } = sessionStore();
 
   const onSubmit = async (data: FormType) => {
     const { email, password } = data;

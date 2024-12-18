@@ -8,6 +8,7 @@ import { useAppSelector } from '@/utils/hooks/useAppSelector';
 import { staticImg } from '@/utils/constant/staticImg';
 import { useCookies } from 'react-cookie';
 import { articlesApi } from '@/store/slices/api/articleApi';
+import { localStore } from '@/utils/helpers/localStorage';
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const { username, image } = useAppSelector(getUserSelector);
   const [_, __, removeCookie] = useCookies(['authToken']);
+  const { removeElemToLocalStorage } = localStore();
 
   const handlerLogOut = () => {
     logOut();
@@ -29,7 +31,11 @@ export const Header = () => {
       <Button
         variant="text"
         className="h-[50px] max-w-[109px] border-0 text-[18px]"
-        onClick={() => navigate(routs.ARTICLE)}
+        onClick={() => {
+          removeElemToLocalStorage('editArticleOptions');
+          removeElemToLocalStorage('createArticleOptions');
+          return navigate(routs.ARTICLE);
+        }}
       >
         Realworld Blog
       </Button>

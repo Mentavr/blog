@@ -1,5 +1,20 @@
 import { InteractionArticle } from '@/app/components';
+import { localStore } from '@/utils/helpers/localStorage';
 
 export const CreateArticlePage = () => {
-  return <InteractionArticle tags={[]} />;
+  const { setElemToLocalStorage, getElemToLocalStorage } = localStore();
+  const storageValue = getElemToLocalStorage('createArticleOptions');
+
+  if (!storageValue) {
+    setElemToLocalStorage(
+      'createArticleOptions',
+      JSON.stringify({
+        desc: '',
+        title: '',
+        tags: [],
+        body: '',
+      })
+    );
+  }
+  return <InteractionArticle />;
 };

@@ -12,7 +12,7 @@ import { Spin } from 'antd';
 import { useCookies } from 'react-cookie';
 import { inputTrim } from '@/utils/helpers/inputTrim';
 import { errorsApiMessage } from '@/utils/constant/errors';
-import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
+import { sessionStore } from '@/utils/helpers/sessionStore';
 
 interface FormType {
   name: string;
@@ -36,6 +36,7 @@ export const SignUpPage = () => {
   const [singUp, { isLoading }] = useGetSingUpMutation();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { setElemToSessionStorage } = sessionStore();
 
   const onSubmit = async (data: FormType) => {
     const { name, email, password } = data;

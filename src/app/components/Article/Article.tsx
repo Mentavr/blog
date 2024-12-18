@@ -20,7 +20,8 @@ import { formatDate } from '@/utils/helpers/formatDate';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import '@/app/components/Article/style.module.css';
-import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
+import { localStore } from '@/utils/helpers/localStorage';
+import { sessionStore } from '@/utils/helpers/sessionStore';
 
 interface IError {
   originalStatus: number | string;
@@ -31,6 +32,11 @@ interface IError {
 }
 
 export const Article = () => {
+  const { removeElemToLocalStorage } = localStore();
+  const { setElemToSessionStorage } = sessionStore();
+  removeElemToLocalStorage('createArticleOptions');
+  removeElemToLocalStorage('editArticleOptions');
+
   const [popoverVisible, setPopoverVisible] = useState(false);
   const { slug } = useParams();
   if (!slug) return null;

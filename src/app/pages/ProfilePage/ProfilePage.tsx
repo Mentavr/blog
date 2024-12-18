@@ -3,7 +3,7 @@ import { useUpdateUserMutation } from '@/store/slices/api/userApi';
 import { errorsApiMessage } from '@/utils/constant/errors';
 import { routs } from '@/utils/constant/routes';
 import { inputTrim } from '@/utils/helpers/inputTrim';
-import { setElemToSessionStorage } from '@/utils/helpers/setElemToSessionStorage';
+import { sessionStore } from '@/utils/helpers/sessionStore';
 import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, Input } from 'antd';
@@ -31,6 +31,7 @@ export const ProfilePage = () => {
 
   const navigate = useNavigate();
   const [updateUser] = useUpdateUserMutation();
+  const { setElemToSessionStorage } = sessionStore();
 
   const onSubmit = async (data: FormType) => {
     const { email, name, password, avatar } = data;
