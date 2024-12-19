@@ -22,7 +22,6 @@ import rehypeRaw from 'rehype-raw';
 import cls from './style.module.css';
 import { localStore } from '@/utils/helpers/localStorage';
 import { sessionStore } from '@/utils/helpers/sessionStore';
-import clsx from 'clsx';
 
 interface IError {
   originalStatus: number | string;
