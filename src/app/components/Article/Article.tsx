@@ -189,6 +189,7 @@ export const Article = () => {
             h4: ({ node, ...props }) => <h4 className="h4Cls" {...props} />,
             h5: ({ node, ...props }) => <h5 className="h5Cls" {...props} />,
             h6: ({ node, ...props }) => <h6 className="h6Cls" {...props} />,
+            // img: ({ node, ...props }) => <img className="imgCls" {...props} />,
           }}
         >
           {body}

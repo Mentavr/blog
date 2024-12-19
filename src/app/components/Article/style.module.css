@@ -51,3 +51,7 @@
   font-weight: bold;
   unicode-bidi: isolate;
 }
+:global(.imgCls) {
+  width: 100%;
+  object-fit: cover;
+}
