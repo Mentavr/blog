@@ -1,57 +1,58 @@
-:global(.ulCls) {
+.ulCls {
   display: block;
   list-style-type: disc;
   padding-inline-start: 40px;
   unicode-bidi: isolate;
 }
 
-:global(.olCls) {
+.olCls {
   display: block;
   list-style-type: decimal;
   padding-inline-start: 40px;
   unicode-bidi: isolate;
 }
 
-:global(.liCls) {
+.liCls {
   display: list-item;
   text-align: -webkit-match-parent;
   unicode-bidi: isolate;
 }
 
-:global(.h2Cls) {
+.h2Cls {
   display: block;
   font-size: 1.5em;
   font-weight: bold;
   unicode-bidi: isolate;
 }
 
-:global(.h3Cls) {
+.h3Cls {
   display: block;
   font-size: 1.17em;
   font-weight: bold;
   unicode-bidi: isolate;
 }
 
-:global(.h4Cls) {
+.h4Cls {
   display: block;
   font-weight: bold;
   unicode-bidi: isolate;
 }
 
-:global(.h5Cls) {
+.h5Cls {
   display: block;
   font-size: 0.83em;
   font-weight: bold;
   unicode-bidi: isolate;
 }
 
-:global(.h6Cls) {
+.h6Cls {
   display: block;
   font-size: 0.67em;
   font-weight: bold;
   unicode-bidi: isolate;
 }
-:global(.imgCls) {
+
+.imgCls {
   width: 100%;
   object-fit: cover;
 }

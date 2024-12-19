@@ -19,9 +19,10 @@ import { errorsApiMessage } from '@/utils/constant/errors';
 import { formatDate } from '@/utils/helpers/formatDate';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import '@/app/components/Article/style.module.css';
+import cls from './style.module.css';
 import { localStore } from '@/utils/helpers/localStorage';
 import { sessionStore } from '@/utils/helpers/sessionStore';
+import clsx from 'clsx';
 
 interface IError {
   originalStatus: number | string;
@@ -181,14 +182,14 @@ export const Article = () => {
           remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
           rehypePlugins={[rehypeRaw]}
           components={{
-            ul: ({ node, ...props }) => <ul className="ulCls" {...props} />,
-            ol: ({ node, ...props }) => <ol className="olCls" {...props} />,
-            li: ({ node, ...props }) => <li className="liCls" {...props} />,
-            h2: ({ node, ...props }) => <h2 className="h2Cls" {...props} />,
-            h3: ({ node, ...props }) => <h3 className="h3Cls" {...props} />,
-            h4: ({ node, ...props }) => <h4 className="h4Cls" {...props} />,
-            h5: ({ node, ...props }) => <h5 className="h5Cls" {...props} />,
-            h6: ({ node, ...props }) => <h6 className="h6Cls" {...props} />,
+            ul: ({ node, ...props }) => <ul className={cls.ulCls} {...props} />,
+            ol: ({ node, ...props }) => <ol className={cls.olCls} {...props} />,
+            li: ({ node, ...props }) => <li className={cls.liCls} {...props} />,
+            h2: ({ node, ...props }) => <h2 className={cls.h2Cls} {...props} />,
+            h3: ({ node, ...props }) => <h3 className={cls.h3Cls} {...props} />,
+            h4: ({ node, ...props }) => <h4 className={cls.h4Cls} {...props} />,
+            h5: ({ node, ...props }) => <h5 className={cls.h5Cls} {...props} />,
+            h6: ({ node, ...props }) => <h6 className={cls.h6Cls} {...props} />,
             // img: ({ node, ...props }) => <img className="imgCls" {...props} />,
           }}
         >
