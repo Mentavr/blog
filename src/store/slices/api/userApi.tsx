@@ -1,4 +1,4 @@
-import { reduxBaseQuery } from '@/configs/reduxBaseQuery';
+import { reduxBaseQuery } from '@/utils/configs/reduxBaseQuery';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { setToken, setUserInfo } from '../authSlice';
 import { toast } from 'react-toastify';

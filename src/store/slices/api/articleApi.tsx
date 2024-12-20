@@ -1,4 +1,4 @@
-import { reduxBaseQuery } from '@/configs/reduxBaseQuery';
+import { reduxBaseQuery } from '@/utils/configs/reduxBaseQuery';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { ArticleTypeRequest, ArticleTypeResponse, ArticlesTypeRequest, ArticlesTypeResponse } from '../types.slices';
 

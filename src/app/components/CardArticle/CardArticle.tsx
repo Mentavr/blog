@@ -55,7 +55,7 @@ export const CardArticle = ({
   };
 
   return (
-    <div className="pt-[15px] px-[14px] pb-[24px] shadow-[0 4px 12px 0 rgba(0, 0, 0, 0.15)] bg-backgroundColorBase rounded-[5px] flex flex-col gap-[12px]">
+    <div className="pt-[15px] px-[14px] pb-[24px] bg-backgroundColorBase rounded-[5px] flex flex-col gap-[12px] shadow-custom">
       <div className="flex gap-[4px] items-center justify-between">
         <div className="flex flex-col gap-[4px] max-w-[560px]">
           <div className="flex gap-[13px] items-center">
