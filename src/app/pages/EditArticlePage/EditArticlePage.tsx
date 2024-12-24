@@ -12,7 +12,6 @@ export const EditArticlePage = () => {
   const { setElemToLocalStorage, getElemToLocalStorage } = localStore();
 
   const storageValue = getElemToLocalStorage('editArticleOptions');
-  console.log(storageValue);
 
   if (!slug) return;
 

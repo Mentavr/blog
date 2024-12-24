@@ -1,11 +1,6 @@
-import { HartIcon } from '@/assets/icons/HartIcon';
 import { Link } from 'react-router-dom';
 import { routs } from '@/utils/constant/routes';
-import { TagArticle } from '..';
-import { useFavoriteArticleMutation, useUnFavoriteArticleMutation } from '@/store/slices/api/articleApi';
-import { toast } from 'react-toastify';
-import { errorsApiMessage } from '@/utils/constant/errors';
-import { EmptyHartIcon } from '@/assets/icons/EmptyHartIcon';
+import { LikeArticle, TagArticle } from '..';
 import { formatDate } from '@/utils/helpers/formatDate';
 
 interface ArticleProps {
@@ -21,10 +16,6 @@ interface ArticleProps {
   isLoadingArticles?: boolean;
 }
 
-interface IError {
-  status: string | number;
-}
-
 export const CardArticle = ({
   description,
   title,
@@ -36,24 +27,6 @@ export const CardArticle = ({
   slug,
   favorited,
 }: ArticleProps) => {
-  const [favorite] = useFavoriteArticleMutation();
-  const [unFavorite] = useUnFavoriteArticleMutation();
-
-  const handlerFavorite = async () => {
-    try {
-      favorited ? await unFavorite(slug).unwrap() : await favorite(slug).unwrap();
-    } catch (error) {
-      const { status } = error as IError;
-      if (status === errorsApiMessage[401].name) {
-        toast.error(errorsApiMessage[401].message);
-      }
-
-      if (status === errorsApiMessage.FETCH_ERROR.name) {
-        toast.error(errorsApiMessage.FETCH_ERROR.message);
-      }
-    }
-  };
-
   return (
     <div className="pt-[15px] px-[14px] pb-[24px] bg-backgroundColorBase rounded-[5px] flex flex-col gap-[12px] shadow-custom">
       <div className="flex gap-[4px] items-center justify-between">
@@ -62,10 +35,7 @@ export const CardArticle = ({
             <Link to={`${routs.ARTICLE}/${slug}`} className="max-w-[560px]">
               <h3 className="text-primaryColor text-[20px] break-words">{title}</h3>
             </Link>
-            <button className="flex gap-[5px] items-center border-0" onClick={handlerFavorite}>
-              {favorited ? <HartIcon /> : <EmptyHartIcon />}
-              <span className="text-[12px] text-textColor">{likes}</span>
-            </button>
+            <LikeArticle favorited={favorited} likes={likes} slug={slug} />
           </div>
           <div className="flex gap-[8px] items-center max-w-[560px] flex-wrap">
             {tags?.map((tag, index) => {

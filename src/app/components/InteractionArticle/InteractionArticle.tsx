@@ -41,7 +41,6 @@ export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
   const { desc, title, tags, body } = slug
     ? getElemToLocalStorage('editArticleOptions')
     : getElemToLocalStorage('createArticleOptions');
-  console.log(desc);
 
   const {
     control,
@@ -137,7 +136,6 @@ export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
     values: { title?: string; desc?: string; body?: string; tags?: string[] },
     slug: string | null
   ) => {
-    console.log('values', values);
     const valuesStorage = JSON.stringify({
       ...values,
     });

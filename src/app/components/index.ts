@@ -6,5 +6,6 @@ import { TagArticle } from '@/app/components/TagArticle/TagArticle';
 import { CardsArticles } from '@/app/components/CardsArticles/CardsArticles';
 import { Article } from '@/app/components/Article/Article';
 import { InteractionArticle } from '@/app/components/InteractionArticle/InteractionArticle';
+import { LikeArticle } from '@/app/components/LikeArticle/LikeArticle';
 
-export { Modal, Header, CardArticle, CardsArticles, Button, TagArticle, Article, InteractionArticle };
+export { Modal, Header, CardArticle, CardsArticles, Button, TagArticle, Article, InteractionArticle, LikeArticle };
