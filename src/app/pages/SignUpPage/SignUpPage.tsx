@@ -77,6 +77,14 @@ export const SignUpPage = () => {
         <Input placeholder="Username" labelInput="Username" control={control} errors={errors} nameInput="name" />
 
         <Input
+          placeholder="Email address"
+          labelInput="Email address"
+          control={control}
+          errors={errors}
+          nameInput="email"
+        />
+
+        <Input
           placeholder="Password"
           labelInput="Password"
           control={control}
