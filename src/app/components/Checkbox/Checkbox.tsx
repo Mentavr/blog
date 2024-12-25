@@ -1,5 +1,5 @@
 import { Form, Checkbox as AntCheckbox } from 'antd';
-import { Control, Controller, FieldErrors, FieldValues, Noop, Path, PathValue, RefCallBack } from 'react-hook-form';
+import { Control, Controller, FieldErrors, FieldValues, Path, PathValue } from 'react-hook-form';
 
 interface ICheckboxProps<T extends FieldValues> {
   control: Control<T>;
@@ -7,17 +7,6 @@ interface ICheckboxProps<T extends FieldValues> {
   nameInput: Path<T>;
   defaultValue?: PathValue<T, Path<T>>;
 }
-
-// interface IFieldTypes {
-//   field: {
-//     onChange: (...event: any[]) => void;
-//     onBlur: Noop;
-//     value: boolean;
-//     disabled: boolean | undefined;
-//     name: string;
-//     ref: RefCallBack;
-//   };
-// }
 
 export const Checkbox = <T extends FieldValues>({ control, errors, nameInput, defaultValue }: ICheckboxProps<T>) => {
   return (
