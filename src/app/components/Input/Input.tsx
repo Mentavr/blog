@@ -1,6 +1,6 @@
 import { inputTrim } from '@/utils/helpers/inputTrim';
 import { Form, Input as AntInput } from 'antd';
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { Control, Controller, FieldErrors, FieldValues, Path, PathValue } from 'react-hook-form';
 
 interface IInputProps<T extends FieldValues> {
@@ -11,6 +11,12 @@ interface IInputProps<T extends FieldValues> {
   labelInput: string;
   type?: 'text' | 'password' | 'textArea';
   defaultValue?: PathValue<T, Path<T>>;
+  slug?: string;
+  setProperty?: (
+    values: { title?: string; desc?: string; body?: string; tags?: string[] },
+    slug: string | null
+  ) => void;
+  valuesForm?: FieldValues;
 }
 
 interface AntInputTypeProps {
@@ -30,17 +36,17 @@ export const Input = <T extends FieldValues>({
   labelInput,
   placeholder,
   defaultValue,
+  setProperty,
+  slug,
+  valuesForm,
   type = 'text',
 }: IInputProps<T>) => {
   const AntInputType = useCallback(({ field }: AntInputTypeProps) => {
-    const { ref, ...fields } = field;
-    const refMyInput = useRef<any>(ref);
-    const options = { ref: refMyInput, ...fields };
     switch (type) {
       case 'text':
         return (
           <AntInput
-            {...options}
+            {...field}
             onInput={inputTrim}
             className="rounder-[4px]"
             size="large"
@@ -52,7 +58,7 @@ export const Input = <T extends FieldValues>({
       case 'password':
         return (
           <AntInput.Password
-            {...options}
+            {...field}
             onInput={inputTrim}
             className="rounder-[4px]"
             size="large"
@@ -64,7 +70,7 @@ export const Input = <T extends FieldValues>({
       case 'textArea':
         return (
           <AntInput.TextArea
-            {...options}
+            {...field}
             onInput={inputTrim}
             className="rounder-[4px]"
             size="large"
@@ -81,7 +87,12 @@ export const Input = <T extends FieldValues>({
         name={nameInput}
         control={control}
         defaultValue={defaultValue as PathValue<T, Path<T>>}
-        render={({ field }) => <AntInputType field={field} />}
+        render={({ field }) => {
+          if (setProperty && valuesForm) {
+            setProperty(valuesForm, slug ? slug : null);
+          }
+          return <AntInputType field={field} />;
+        }}
       />
       {errors[nameInput]?.message && (
         <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">

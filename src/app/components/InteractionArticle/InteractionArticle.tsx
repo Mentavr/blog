@@ -48,6 +48,7 @@ export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
     formState: { errors },
     setValue,
     getValues,
+    watch,
   } = useForm({
     resolver: yupResolver(validation.edit),
     defaultValues: {
@@ -149,17 +150,26 @@ export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
     const tagsStringArticle = tagsArticle.map(({ nameTag }) => nameTag).filter((elem) => elem.length > 0);
     setValue('tags', tagsStringArticle);
     setProperty(getValues(), slug ? slug : null);
-  }, [tagsArticle]);
+  }, [tagsArticle, watch('title'), watch('desc'), watch('body')]);
 
   return isLoadingCreate || isLoadingUpdate ? (
     <Spin className="absolute inset-0 top-2/4" size="large" />
   ) : (
     <div className="py-[48px] px-[32px] border border-normalColor rounded-[6px] bg-backgroundColorBase shadow-myShadow mx-auto mt-[59px] mb-[239px] text-center">
       <h1 className="weight-500 text-[20px] text-[#262626] mb-[20px]">
-        {slug ? 'Edit article' : 'Create new account'}
+        {slug ? 'Edit article' : 'Create new article'}
       </h1>
       <Form layout={'vertical'} onFinish={handleSubmit(onSubmit)}>
-        <Input placeholder="Title" control={control} errors={errors} nameInput="title" labelInput="Title" />
+        <Input
+          placeholder="Title"
+          control={control}
+          errors={errors}
+          nameInput="title"
+          labelInput="Title"
+          slug={slug}
+          setProperty={setProperty}
+          valuesForm={getValues()}
+        />
 
         <Input
           placeholder="Short description"
@@ -167,6 +177,9 @@ export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
           errors={errors}
           nameInput="desc"
           labelInput="Short description"
+          slug={slug}
+          setProperty={setProperty}
+          valuesForm={getValues()}
         />
 
         <Input
@@ -176,6 +189,9 @@ export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
           nameInput="body"
           labelInput="Text"
           type="textArea"
+          slug={slug}
+          setProperty={setProperty}
+          valuesForm={getValues()}
         />
 
         <AddTags tagsArticle={tagsArticle} setTagsArticle={setTagsArticle} errors={errors as FieldErrors<FormType>} />
