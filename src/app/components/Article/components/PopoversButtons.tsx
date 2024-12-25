@@ -96,12 +96,12 @@ export const PopoversButtons = ({ slug }: PopoversButtonsProps) => {
         open={popoverVisible}
         onOpenChange={handlePopoverChange}
       >
-        <Button className="max-h-[30px]" variant="outlined" color="danger" disabled={!isAuth}>
+        <Button className="max-h-[30px]" variant="outlined" color="danger" disabled={!isAuth || isLoading}>
           Delete
         </Button>
       </Popover>
       <Popover placement="top" content={!isAuth ? popoverContent : ''}>
-        <Button className="max-h-[30px]" colorDefault="green" disabled={!isAuth} onClick={handlerEdit}>
+        <Button className="max-h-[30px]" colorDefault="green" disabled={!isAuth || isLoading} onClick={handlerEdit}>
           Edit
         </Button>
       </Popover>
