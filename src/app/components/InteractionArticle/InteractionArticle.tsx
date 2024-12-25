@@ -203,6 +203,7 @@ export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
           color="primary"
           htmlType="submit"
           buttonName="Send"
+          disabled={isLoadingCreate || isLoadingUpdate}
         />
       </Form>
     </div>

@@ -61,6 +61,7 @@ export const CardsArticles = ({
         onChange={handlerChangePage}
         pageSize={limit}
         defaultCurrent={pageSession ?? 1}
+        disabled={isLoadingArticles}
       />
     </div>
   );

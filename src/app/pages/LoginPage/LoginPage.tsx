@@ -97,6 +97,7 @@ export const LoginPage = () => {
           navigateLabel="Sign Up"
           navigateDesc={'Don’t have an account? '}
           navigate={routs.SIGNUP}
+          disabled={isLoading}
         />
       </Form>
     </div>

@@ -27,7 +27,7 @@ export const PopoversButtons = ({ slug }: PopoversButtonsProps) => {
   const { isAuth } = useAuth();
   const navigate = useNavigate();
 
-  const [deleteArticle] = useDeleteArticleMutation();
+  const [deleteArticle, { isLoading }] = useDeleteArticleMutation();
 
   const handlerEdit = () => {
     navigate(`${routs.ARTICLE}/${slug}${routs.EDITARTICLE}`);
@@ -77,10 +77,10 @@ export const PopoversButtons = ({ slug }: PopoversButtonsProps) => {
         <p className="text-[14px] ml-[20px]">Are you sure to delete this article?</p>
       </div>
       <div className="flex gap-[8px] justify-end">
-        <Button className="max-w-[34px] max-h-[24px] border-normalColor" onClick={handlerNo}>
+        <Button className="max-w-[34px] max-h-[24px] border-normalColor" onClick={handlerNo} disabled={isLoading}>
           No
         </Button>
-        <Button color="primary" className="max-w-[39px] max-h-[24px]" onClick={handlerYes}>
+        <Button color="primary" className="max-w-[39px] max-h-[24px]" onClick={handlerYes} disabled={isLoading}>
           Yes
         </Button>
       </div>

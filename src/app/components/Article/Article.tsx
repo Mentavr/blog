@@ -1,5 +1,3 @@
-import { useGetArticleQuery } from '@/store/slices/api/articleApi';
-import { useParams } from 'react-router-dom';
 import { LikeArticle, TagArticle } from '..';
 import Markdown from 'react-markdown';
 import { formatDate } from '@/utils/helpers/formatDate';
@@ -8,19 +6,19 @@ import rehypeRaw from 'rehype-raw';
 import cls from './style.module.css';
 import { localStore } from '@/utils/helpers/localStorage';
 import { PopoversButtons } from './components/PopoversButtons';
+import { ArticleType } from '@/store/slices/types.slices';
 
-export const Article = () => {
+interface ArticleProps {
+  data: ArticleType;
+}
+
+export const Article = ({ data }: ArticleProps) => {
   const { removeElemToLocalStorage } = localStore();
 
   removeElemToLocalStorage('createArticleOptions');
   removeElemToLocalStorage('editArticleOptions');
 
-  const { slug } = useParams();
-  if (!slug) return null;
-  const { data } = useGetArticleQuery({ slug });
-  if (!data) return null;
-
-  const { title, description, body, tagList, createdAt, favorited, favoritesCount, author } = data.article;
+  const { title, description, body, tagList, createdAt, favorited, favoritesCount, author, slug } = data;
 
   return (
     <article className="w-full px-[16px] pt-[15px] pb-[100px] bg-backgroundColorBase shadow-custom mt-[26px] closePop">

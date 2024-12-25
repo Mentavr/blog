@@ -29,7 +29,7 @@ export const ProfilePage = () => {
   } = useForm({ resolver: yupResolver(validation.profile) });
 
   const navigate = useNavigate();
-  const [updateUser] = useUpdateUserMutation();
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
   const { setElemToSessionStorage } = sessionStore();
 
   const onSubmit = async (data: FormType) => {
@@ -94,6 +94,7 @@ export const ProfilePage = () => {
           color="primary"
           htmlType="submit"
           buttonName="Save"
+          disabled={isLoading}
         />
       </Form>
     </div>
