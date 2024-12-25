@@ -1,16 +1,15 @@
-import { Button } from '@/app/components';
+import { Checkbox, FormButton, Input } from '@/app/components';
 import { useGetSingUpMutation } from '@/store/slices/api/userApi';
 import { routs } from '@/utils/constant/routes';
 import { useAuth } from '@/utils/hooks/useAuth';
 import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox, Form, Input } from 'antd';
-import { Controller, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Form } from 'antd';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Spin } from 'antd';
 import { useCookies } from 'react-cookie';
-import { inputTrim } from '@/utils/helpers/inputTrim';
 import { errorsApiMessage } from '@/utils/constant/errors';
 import { sessionStore } from '@/utils/helpers/sessionStore';
 
@@ -75,134 +74,39 @@ export const SignUpPage = () => {
     <div className="py-[48px] px-[32px] max-w-[384px] border border-normalColor rounded-[6px] bg-backgroundColorBase shadow-myShadow mx-auto mt-[59px] mb-[239px] text-center">
       <h1 className="weight-500 text-[20px] text-[#262626] mb-[20px]">Create new account</h1>
       <Form layout={'vertical'} onFinish={handleSubmit(onSubmit)}>
-        <Form.Item className="mb-[20px]" label="Username">
-          <Controller
-            name="name"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Input
-                onInput={inputTrim}
-                {...field}
-                className="rounder-[4px]"
-                size="large"
-                placeholder="Username"
-                status={errors.name && 'error'}
-              />
-            )}
-          />
-          {errors.name && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.name.message}
-            </span>
-          )}
-        </Form.Item>
+        <Input placeholder="Username" labelInput="Username" control={control} errors={errors} nameInput="name" />
 
-        <Form.Item className="mb-[20px]" label="Email address">
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Input
-                {...field}
-                onInput={inputTrim}
-                className="rounder-[4px]"
-                size="large"
-                placeholder="Email address"
-                status={errors.email && 'error'}
-              />
-            )}
-          />
-          {errors.email && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.email.message}
-            </span>
-          )}
-        </Form.Item>
+        <Input
+          placeholder="Password"
+          labelInput="Password"
+          control={control}
+          errors={errors}
+          nameInput="password"
+          type="password"
+        />
 
-        <Form.Item className="mb-[20px]" label="Password">
-          <Controller
-            name="password"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Input.Password
-                {...field}
-                onInput={inputTrim}
-                className="h-[40] rounder-[4px]"
-                size="large"
-                placeholder="Password"
-                status={errors.password && 'error'}
-              />
-            )}
-          />
-          {errors.password && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.password.message}
-            </span>
-          )}
-        </Form.Item>
+        <Input
+          placeholder="Password"
+          labelInput="Repeat Password"
+          control={control}
+          errors={errors}
+          nameInput="confirm_password"
+          type="password"
+        />
 
-        <Form.Item className="mb-[20px]" label="Repeat Password">
-          <Controller
-            name="confirm_password"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Input.Password
-                {...field}
-                onInput={inputTrim}
-                className="h-[40] rounder-[4px]"
-                size="large"
-                placeholder="Password"
-                status={errors.confirm_password && 'error'}
-              />
-            )}
-          />
-          {errors.confirm_password && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.confirm_password.message}
-            </span>
-          )}
-        </Form.Item>
+        <Checkbox control={control} errors={errors} nameInput="info" defaultValue={false} />
 
-        <Form.Item name="remember" valuePropName="checked" label={null}>
-          <Controller
-            name="info"
-            control={control}
-            defaultValue={false}
-            render={({ field }) => {
-              const { onChange, value, ...rest } = field;
-              return (
-                <div className="flex items-start gap-[8px]">
-                  <Checkbox id="info" {...rest} checked={value} onChange={(e) => onChange(e.target.checked)} />
-                  <label className="text-start w-full" htmlFor="info">
-                    I agree to the processing of my personal information
-                  </label>
-                </div>
-              );
-            }}
-          />
-          {errors.info && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.info.message}
-            </span>
-          )}
-        </Form.Item>
-
-        <Form.Item className="mb-[0]">
-          <Button className="mb-[8px]" variant="solid" color="primary" htmlType="submit">
-            Create
-          </Button>
-          <span className="text-[12px] text-[#8c8c8c] text-center">
-            Already have an account?{' '}
-            <Link className="text-primaryColor" to={routs.LOGIN}>
-              Sign In
-            </Link>
-            .
-          </span>
-        </Form.Item>
+        <FormButton
+          classNameWrapper="mb-[0]"
+          className="mb-[8px]"
+          variant="solid"
+          color="primary"
+          htmlType="submit"
+          buttonName="Create"
+          navigateLabel="Sign In"
+          navigateDesc={'Already have an account? '}
+          navigate={routs.LOGIN}
+        />
       </Form>
     </div>
   );

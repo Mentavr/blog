@@ -2,7 +2,7 @@ import { Button as AntButton, ConfigProvider } from 'antd';
 import clsx from 'clsx';
 import { type ReactNode } from 'react';
 
-interface ButtonProps {
+export interface ButtonProps {
   children?: ReactNode;
   className?: string;
   htmlType?: 'submit' | 'reset' | 'button';

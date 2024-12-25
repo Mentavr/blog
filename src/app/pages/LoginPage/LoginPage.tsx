@@ -1,16 +1,15 @@
-import { Button } from '@/app/components';
+import { FormButton, Input } from '@/app/components';
 import { useGetLoginUserMutation } from '@/store/slices/api/userApi';
 import { errorsApiMessage } from '@/utils/constant/errors';
 import { routs } from '@/utils/constant/routes';
-import { inputTrim } from '@/utils/helpers/inputTrim';
 import { sessionStore } from '@/utils/helpers/sessionStore';
 import { useAuth } from '@/utils/hooks/useAuth';
 import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Form, Input, Spin } from 'antd';
+import { Form, Spin } from 'antd';
 import { useCookies } from 'react-cookie';
-import { useForm, Controller } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 interface FormType {
@@ -27,7 +26,7 @@ export const LoginPage = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(validation.login) });
+  } = useForm<FormType>({ resolver: yupResolver(validation.login) });
 
   const [_, setCookie] = useCookies(['authToken']);
 
@@ -71,64 +70,34 @@ export const LoginPage = () => {
     <div className="py-[48px] px-[32px] max-w-[384px] border border-normalColor rounded-[6px] bg-backgroundColorBase shadow-myShadow mx-auto mt-[59px] text-center">
       <h1 className="weight-500 text-[20px] text-[#262626] mb-[20px]">Sign In</h1>
       <Form layout={'vertical'} onFinish={handleSubmit(onSubmit)}>
-        <Form.Item className="mb-[20px]" label="Email address">
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Input
-                {...field}
-                onInput={inputTrim}
-                className="rounder-[4px]"
-                size="large"
-                placeholder="Email address"
-                status={errors.email && 'error'}
-              />
-            )}
-          />
-          {errors.email && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.email.message}
-            </span>
-          )}
-        </Form.Item>
+        <Input
+          placeholder="Email address"
+          labelInput="Email address"
+          control={control}
+          errors={errors}
+          nameInput="email"
+        />
 
-        <Form.Item className="mb-[20px]" label="Password">
-          <Controller
-            name="password"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Input.Password
-                {...field}
-                onInput={inputTrim}
-                className="h-[40] rounder-[4px]"
-                size="large"
-                placeholder="Password"
-                status={errors.password && 'error'}
-              />
-            )}
-          />
-          {errors.password && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.password.message}
-            </span>
-          )}
-        </Form.Item>
+        <Input
+          placeholder="Password"
+          labelInput="Password"
+          control={control}
+          errors={errors}
+          nameInput="password"
+          type="password"
+        />
 
-        <Form.Item className="mb-[0]">
-          <Button className="mb-[8px]" variant="solid" color="primary" htmlType="submit">
-            Login
-          </Button>
-          <span className="text-[12px] text-[#8c8c8c] text-center">
-            Don’t have an account?{' '}
-            <Link className="text-primaryColor" to={routs.SIGNUP}>
-              Sign Up
-            </Link>
-            .
-          </span>
-        </Form.Item>
+        <FormButton
+          classNameWrapper="mb-[0]"
+          className="mb-[8px]"
+          variant="solid"
+          color="primary"
+          htmlType="submit"
+          buttonName="Login"
+          navigateLabel="Sign Up"
+          navigateDesc={'Don’t have an account? '}
+          navigate={routs.SIGNUP}
+        />
       </Form>
     </div>
   );

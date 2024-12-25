@@ -1,17 +1,17 @@
 import { validation } from '@/utils/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Form, Input, Spin } from 'antd';
+import { Form, Spin } from 'antd';
 import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { AddTag } from './components/AddTag';
-import { inputTrim } from '@/utils/helpers/inputTrim';
 import { generateUniqueId } from '@/utils/helpers/generateUniqueId';
 import { useCreateArticleMutation, useUpdateArticleMutation } from '@/store/slices/api/articleApi';
 import { routs } from '@/utils/constant/routes';
 import { toast } from 'react-toastify';
 import { sessionStore } from '@/utils/helpers/sessionStore';
 import { localStore } from '@/utils/helpers/localStorage';
+import { FormButton, Input } from '..';
+import { AddTags } from './components/AddTags';
 
 interface FormType {
   title: string;
@@ -56,6 +56,7 @@ export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
       tags: tags,
       body: body,
     },
+    mode: 'onTouched',
   });
 
   const navigate = useNavigate();
@@ -158,105 +159,35 @@ export const InteractionArticle = ({ slug }: InteractionArticleProps) => {
         {slug ? 'Edit article' : 'Create new account'}
       </h1>
       <Form layout={'vertical'} onFinish={handleSubmit(onSubmit)}>
-        <Form.Item className="mb-[20px]" label="Title">
-          <Controller
-            name="title"
-            control={control}
-            render={({ field }) => {
-              setProperty(getValues(), slug ? slug : null);
-              return (
-                <Input
-                  {...field}
-                  onInput={inputTrim}
-                  className="rounder-[4px]"
-                  size="large"
-                  placeholder="Title"
-                  status={errors.title && 'error'}
-                />
-              );
-            }}
-          />
-          {errors.title && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.title.message}
-            </span>
-          )}
-        </Form.Item>
+        <Input placeholder="Title" control={control} errors={errors} nameInput="title" labelInput="Title" />
 
-        <Form.Item className="mb-[20px]" label="Short description">
-          <Controller
-            name="desc"
-            control={control}
-            render={({ field }) => {
-              setProperty(getValues(), slug ? slug : null);
-              return (
-                <Input
-                  {...field}
-                  onInput={inputTrim}
-                  className="rounder-[4px]"
-                  size="large"
-                  placeholder="Short description"
-                  status={errors.desc && 'error'}
-                />
-              );
-            }}
-          />
-          {errors.desc && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.desc.message}
-            </span>
-          )}
-        </Form.Item>
+        <Input
+          placeholder="Short description"
+          control={control}
+          errors={errors}
+          nameInput="desc"
+          labelInput="Short description"
+        />
 
-        <Form.Item className="mb-[20px]" label="Text">
-          <Controller
-            name="body"
-            control={control}
-            render={({ field }) => {
-              setProperty(getValues(), slug ? slug : null);
-              return (
-                <Input.TextArea
-                  {...field}
-                  onInput={inputTrim}
-                  className="h-[40] rounder-[4px]"
-                  size="large"
-                  placeholder="Text"
-                  status={errors.body && 'error'}
-                />
-              );
-            }}
-          />
-          {errors.body && (
-            <span className="text-errorColor text-[14px] text-start w-full inline-block mt-[4px]">
-              {errors.body.message}
-            </span>
-          )}
-        </Form.Item>
+        <Input
+          placeholder="Text"
+          control={control}
+          errors={errors}
+          nameInput="body"
+          labelInput="Text"
+          type="textArea"
+        />
 
-        <Form.Item className="mb-[20px]" label="Tag">
-          <div className="flex flex-col gap-[5px]">
-            {tagsArticle.map(({ nameTag, idArticle }, index) => {
-              const error = errors.tags?.[index]?.message;
-              return (
-                <div key={idArticle} className="flex gap-[17px] flex-col gap-[5px] text-start">
-                  <AddTag
-                    nameTag={nameTag}
-                    idArticle={idArticle}
-                    setTagsArticle={setTagsArticle}
-                    tagsArticle={tagsArticle}
-                  />
-                  {error && <span className="text-errorColor text-[14px] w-full">{error}</span>}
-                </div>
-              );
-            })}
-          </div>
-        </Form.Item>
+        <AddTags tagsArticle={tagsArticle} setTagsArticle={setTagsArticle} errors={errors as FieldErrors<FormType>} />
 
-        <Form.Item className="mb-[0] max-w-[320px]">
-          <Button className="mb-[8px] w-full" variant="solid" color="primary" htmlType="submit">
-            Send
-          </Button>
-        </Form.Item>
+        <FormButton
+          classNameWrapper="mb-[0] max-w-[320px]"
+          className="mb-[8px] w-full"
+          variant="solid"
+          color="primary"
+          htmlType="submit"
+          buttonName="Send"
+        />
       </Form>
     </div>
   );
