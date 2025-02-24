@@ -11,10 +11,11 @@ import {
   SignUpPage,
 } from '../pages';
 import { routs } from '@/utils/constant/routes';
+import App from '../App';
 
 export const router = createBrowserRouter([
   {
-    element: <Layout />,
+    element: <App />,
     path: routs.MAIN,
     children: [
       {
@@ -38,16 +39,11 @@ export const router = createBrowserRouter([
             path: `${routs.ARTICLE}/:slug`,
             element: <ArticlePage />,
           },
+          {
+            path: routs.ALL,
+            element: <div>Error Page</div>,
+          },
         ],
-      },
-    ],
-  },
-  {
-    element: <Outlet />,
-    children: [
-      {
-        path: routs.ALL,
-        element: <div>Error Page</div>,
       },
     ],
   },

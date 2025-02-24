@@ -27,7 +27,6 @@ createRoot(document.getElementById('root')!).render(
           pauseOnHover
           theme="light"
         />
-        <App />
       </ReduxProvider>
     </AuthProvider>
   </CookiesProvider>
